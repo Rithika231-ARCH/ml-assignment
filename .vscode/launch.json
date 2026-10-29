@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Streamlit: Face Detection App",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "streamlit",
+            "args": [
+                "run",
+                "${workspaceFolder}/face_detection_app/app.py"
+            ]
+        },
+        {
+            "name": "Streamlit: House Rent App",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "streamlit",
+            "args": [
+                "run",
+                "${workspaceFolder}/app.py"
+            ]
+        },
+        {
+            "name": "Python: Predict Sample",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/predict_sample.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Train Models",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/train_model.py",
+            "console": "integratedTerminal"
+        }
+    ]
+}

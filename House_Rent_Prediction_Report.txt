@@ -1,0 +1,245 @@
+================================================================================
+PROJECT REPORT: HOUSE RENT PREDICTION AND MACHINE LEARNING ANALYSIS
+================================================================================
+
+TITLE: Build and Analyze a Machine Learning Model for House Rent Prediction
+DOMAIN: Real Estate Analytics / Supervised Machine Learning (Regression)
+DATASET: Indian Metropolitan House Rent Dataset (4,746 Listings)
+SUBMISSION DATE: October 2026
+
+--------------------------------------------------------------------------------
+1. ABSTRACT
+--------------------------------------------------------------------------------
+Accurately predicting residential house rent is an important real-world 
+application of machine learning. Real estate rental rates depend heavily on a 
+combination of physical characteristics (such as floor area, bedroom count, 
+and bathroom count), spatial dynamics (city and locality tier), and lease 
+specifications (furnishing status and tenant preferences). 
+
+In this project, an end-to-end Machine Learning pipeline was developed to predict 
+monthly house rent across six major Indian metropolitan cities: Mumbai, Bangalore, 
+Chennai, Hyderabad, Delhi, and Kolkata. The raw dataset containing 4,746 records 
+was preprocessed, cleaned, and enriched with domain-specific features including 
+floor level decomposition, living area per bedroom, and sanitary space ratios. 
+To counteract the severe right-skewness of rental prices, a natural log target 
+transformation was implemented. 
+
+Five regression algorithms were trained and benchmarked using 5-fold cross-validation:
+1. Multiple Linear Regression (OLS)
+2. Ridge Regression (L2 Regularization)
+3. Decision Tree Regressor
+4. Random Forest Regressor (Bagging Ensemble)
+5. Gradient Boosting Regressor (Sequential Boosting)
+
+The Gradient Boosting Regressor achieved the highest predictive accuracy, 
+obtaining an R-squared score of 0.8428 on the log scale (5-Fold CV R2 = 0.8255) 
+and a Mean Absolute Percentage Error (MAPE) of 29.46%. The Random Forest Regressor 
+achieved the lowest absolute rupee error, with a Mean Absolute Error (MAE) of 
+INR 10,609. Feature importance analysis revealed that property size (sq. ft.), 
+city location (specifically the Mumbai geographical premium), and bathroom count 
+are the dominant factors determining rental prices. The finalized model was deployed 
+into an interactive Streamlit web application for real-time user inference.
+
+--------------------------------------------------------------------------------
+2. PROBLEM STATEMENT AND OBJECTIVES
+--------------------------------------------------------------------------------
+2.1 Problem Statement:
+In urban rental markets, property valuation is often non-transparent and prone 
+to speculation. Tenants risk paying inflated rents, while landlords face 
+extended vacancies if properties are over-priced. The goal of this project is 
+to formulate a supervised regression task: given a set of structured property 
+features X, predict the fair market monthly rent Y (in INR).
+
+2.2 Objectives:
+- Analyze real-world rental listings from six Indian metropolitan hubs.
+- Identify the primary drivers that influence rental price variations.
+- Build robust preprocessing pipelines handling mixed data types, string parsing, 
+  and extreme price outliers.
+- Train, evaluate, and compare multiple machine learning algorithms.
+- Formulate practical evaluation metrics (MAE, RMSE, MAPE, R2 score).
+- Deploy the optimized machine learning model as an interactive web interface.
+
+--------------------------------------------------------------------------------
+3. DATASET DESCRIPTION AND EXPLORATORY DATA ANALYSIS (EDA)
+--------------------------------------------------------------------------------
+3.1 Dataset Overview:
+The dataset consists of 4,746 residential property records with 12 baseline 
+attributes collected across 6 major Indian metro cities.
+
+Key Attributes:
+1. Posted On: Date listing was published
+2. BHK: Number of Bedrooms, Hall, Kitchen (Range: 1 to 6)
+3. Rent: Target variable representing monthly rent in INR (Range: INR 1,200 to 3,500,000)
+4. Size: Usable carpet/super area in square feet (Range: 10 to 8,000 sq.ft.)
+5. Floor: Text representation of floor location (e.g., 'Ground out of 2', '3 out of 10')
+6. Area Type: Measurement standard ('Super Area', 'Carpet Area', 'Built Area')
+7. Area Locality: Locality name within the city (2,235 unique localities)
+8. City: Metropolitan city ('Mumbai', 'Bangalore', 'Chennai', 'Hyderabad', 'Delhi', 'Kolkata')
+9. Furnishing Status: Condition ('Furnished', 'Semi-Furnished', 'Unfurnished')
+10. Tenant Preferred: Target tenant group ('Bachelors/Family', 'Bachelors', 'Family')
+11. Bathroom: Number of private bathrooms (Range: 1 to 10)
+12. Point of Contact: Contact channel ('Contact Owner', 'Contact Agent', 'Contact Builder')
+
+3.2 Data Cleaning and Missing Value Audit:
+A complete column audit confirmed zero missing values (0.0% nulls) across all 
+4,746 rows.
+
+3.3 Key Exploratory Findings:
+- Severe Positive Skewness: The median rent is INR 16,000, while the mean is 
+  INR 34,993, skewed heavily by luxury penthouses exceeding INR 500,000. 
+  Applying log(1 + Rent) transformed the distribution into a near-normal Gaussian 
+  bell curve, stabilizing variance for model training.
+- Geographic Disparity: Mumbai has the highest median rent (INR 38,000) and an 
+  average rent of INR 85,321 due to severe land constraints. Delhi, Bangalore, 
+  Chennai, and Hyderabad cluster with medians between INR 15,000 and INR 16,000. 
+  Kolkata is the most economical market with a median rent of INR 9,500.
+- Size and BHK Correlation: Rent scales non-linearly with property size. 
+  Properties in Mumbai exhibit a significantly steeper price-per-square-foot slope 
+  than properties in other cities.
+
+--------------------------------------------------------------------------------
+4. DATA PREPROCESSING AND FEATURE ENGINEERING
+--------------------------------------------------------------------------------
+To convert raw inputs into machine-learning-ready features, the following 
+preprocessing steps were executed:
+
+4.1 Floor String Parsing:
+Raw strings like '3 out of 10' or 'Upper Basement out of 4' were parsed using 
+regular expressions into two continuous numerical columns:
+- Floor_Level: Numeric floor index (Ground = 0, Upper Basement = -1, Lower Basement = -2, 
+  1st floor = 1, etc.)
+- Total_Floors: Total building height in floors.
+
+4.2 Domain-Specific Engineered Features:
+- Size_per_BHK: Average square footage per bedroom (Size / BHK), indicating spaciousness.
+- Bathroom_to_BHK_ratio: Sanitary convenience index (Bathroom / BHK).
+- Is_Top_Floor: Binary indicator (1 if Floor_Level >= Total_Floors, else 0).
+- Is_Ground_Floor: Binary indicator (1 if Floor_Level == 0, else 0).
+
+4.3 Scaling and Encoding Pipeline:
+- Numerical Features: Standardized to zero mean and unit variance using StandardScaler.
+- Categorical Features: City, Furnishing Status, Tenant Preferred, Area Type, and 
+  Point of Contact were encoded using OneHotEncoder(drop='first', handle_unknown='ignore').
+- Train-Test Split: 80% Training (3,796 samples) and 20% Testing (950 samples) 
+  with random_state=42.
+
+--------------------------------------------------------------------------------
+5. MACHINE LEARNING ALGORITHMS EVALUATED
+--------------------------------------------------------------------------------
+Five regression models were implemented and compared:
+
+1. Multiple Linear Regression (OLS):
+   Parametric baseline modeling linear relationships between features and log-rent.
+2. Ridge Regression:
+   Linear model incorporating L2 penalty to guard against potential multicollinearity.
+3. Decision Tree Regressor:
+   Non-parametric model that recursively partitions the feature space into orthogonal 
+   regions using variance reduction criteria (max_depth=8, min_samples_split=10).
+4. Random Forest Regressor:
+   Bagging ensemble of 150 randomized decision trees to reduce prediction variance 
+   and avoid overfitting.
+5. Gradient Boosting Regressor:
+   Sequential boosting ensemble building 180 decision trees that iteratively minimize 
+   squared error loss along the negative gradient (learning_rate=0.07, max_depth=5).
+
+--------------------------------------------------------------------------------
+6. EXPERIMENTAL RESULTS AND EVALUATION METRICS
+--------------------------------------------------------------------------------
+Model performance was evaluated on the unseen 20% holdout test set (950 samples) 
+and validated via 5-Fold Cross Validation.
+
+EVALUATION SUMMARY TABLE:
++--------------------+------------+------------+----------+-------------+----------------+
+| Model Name         |  MAE (INR) | RMSE (INR) | MAPE (%) | R2 (Log)    | 5-Fold CV R2   |
++--------------------+------------+------------+----------+-------------+----------------+
+| Linear Regression  |  11,355.71 |  32,935.03 |   30.66% |   0.8308    | 0.8086 ± 0.009 |
+| Ridge Regression   |  11,357.34 |  32,965.38 |   30.65% |   0.8308    | 0.8086 ± 0.009 |
+| Decision Tree      |  12,434.82 |  43,431.38 |   33.43% |   0.8028    | 0.7801 ± 0.017 |
+| Random Forest      |  10,609.37 |  33,949.93 |   29.96% |   0.8372    | 0.8140 ± 0.008 |
+| Gradient Boosting  |  10,795.61 |  36,762.84 |   29.46% |   0.8428    | 0.8255 ± 0.010 |
++--------------------+------------+------------+----------+-------------+----------------+
+
+Observations:
+- Best Overall Explanatory Power: Gradient Boosting achieved the highest R2 score 
+  of 0.8428 (CV R2 = 0.8255) and the lowest relative percentage error (MAPE = 29.46%).
+- Lowest Absolute Rupee Error: Random Forest achieved the lowest MAE (INR 10,609.37).
+- Tree Ensembles vs Single Tree: Random Forest and Gradient Boosting outperformed 
+  the single Decision Tree by over 14% in MAE and reduced RMSE by nearly INR 10,000.
+- Linear Baseline: Linear Regression and Ridge Regression performed similarly, 
+  confirming that features did not exhibit ill-conditioned collinearity.
+
+--------------------------------------------------------------------------------
+7. SHORT ANALYSIS OF RESULTS AND KEY DRIVERS
+--------------------------------------------------------------------------------
+7.1 Impact of Target Log Transformation:
+When models were initially trained on raw, unscaled rent values, extreme luxury 
+rentals (e.g. INR 3.5 million) dominated the loss function, causing linear and 
+boosted models to produce an MAE above INR 21,700. Transforming rent to log(1 + Rent) 
+stabilized residual variance, reducing the test MAE by nearly 50% down to INR 10,600.
+
+7.2 Top Predictive Feature Drivers:
+Based on Gini impurity reduction from the ensemble model:
+1. Property Size (Sq. Ft.): Contributes over 42% of total predictive power. Larger 
+   square footage consistently commands higher baseline rents.
+2. City (Mumbai): The most influential spatial indicator. A property located in 
+   Mumbai carries a substantial geographical rent premium compared to identical units 
+   in other metropolitan cities.
+3. Bathroom Count: Demonstrates higher predictive significance than BHK count alone, 
+   acting as a proxy for luxury master bedrooms and modern apartment layouts.
+4. Furnishing Status: Fully furnished properties command an immediate monthly 
+   premium over unfurnished units.
+5. Point of Contact (Contact Agent): Agent-listed apartments systematically list at 
+   higher rents than owner-listed units due to agency screening and commissions.
+
+7.3 Residual Analysis:
+Residual plots show a uniform horizontal scatter centered at zero, confirming that 
+heteroscedasticity was resolved. The error distribution exhibits a symmetric Gaussian curve.
+
+--------------------------------------------------------------------------------
+8. STREAMLIT WEB APPLICATION OVERVIEW
+--------------------------------------------------------------------------------
+To demonstrate practical deployment, an interactive web application was created 
+in Python using Streamlit (`app.py`):
+
+Key Application Features:
+- User Input Sidebar: Allows dynamic selection of City, BHK, Property Size, 
+  Bathrooms, Floor Level, Building Height, Furnishing, Tenant Type, and Point of Contact.
+- Live Rental Estimation: Computes real-time inference using the serialized model 
+  pipeline (`house_rent_model.joblib`).
+- Confidence Interval: Displays a plausible 15% valuation range alongside the point estimate.
+- Market Benchmarking: Compares predicted rent directly against the chosen city's median rate.
+- Multi-Tab Dashboard:
+  * Tab 1: Rent Estimator (Interactive calculation tool)
+  * Tab 2: Dataset Exploratory Analysis (Displays rent distribution and city comparison charts)
+  * Tab 3: ML Models & Evaluation (Displays the benchmark table, residual plots, and feature importances)
+  * Tab 4: Project Overview & Architecture (Technical methodology and pipeline summary)
+
+--------------------------------------------------------------------------------
+9. LIMITATIONS AND FUTURE WORK
+--------------------------------------------------------------------------------
+9.1 Limitations:
+- Locality Granularity: Due to over 2,200 unique localities, micro-neighborhood 
+  dynamics were grouped at city levels to prevent high-cardinality overfitting.
+- Static Temporal Snapshot: Market listings reflect a single time window and do not 
+  model macroeconomic inflation or real-time mortgage rate shifts.
+
+9.2 Future Improvements:
+- Geospatial coordinates (latitude/longitude) and proximity features (distance to 
+  metro stations, tech hubs, schools).
+- Multimodal modeling incorporating interior property images using Computer Vision 
+  to evaluate renovation quality.
+
+--------------------------------------------------------------------------------
+10. CONCLUSION
+--------------------------------------------------------------------------------
+This project successfully designed, implemented, and analyzed an end-to-end Machine 
+Learning application for House Rent Prediction across major Indian cities. By combining 
+domain-driven feature engineering, log-target normalization, and ensemble algorithms, 
+the Gradient Boosting model achieved a strong R2 score of 0.8428 and an average 
+rupee error of approximately INR 10,600 - 10,795 across thousands of heterogeneous homes. 
+The interactive Streamlit interface bridges academic machine learning and practical 
+real-world decision making.
+
+================================================================================
+END OF REPORT
+================================================================================

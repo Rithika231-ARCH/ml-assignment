@@ -1,0 +1,952 @@
+\documentclass[12pt,a4paper]{report}
+
+% =========================================================================
+% PACKAGES & SYSTEM SETUP
+% =========================================================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx} % Standard Times typography matching seminar reports
+\usepackage[top=1in,bottom=1in,left=1.25in,right=1in]{geometry}
+\usepackage{setspace}
+\setstretch{1.3} % 1.3 line spacing matching standard seminar reports
+\usepackage{enumitem} % Clean, customizable lists
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs,tabularx,longtable,array,multirow}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,calc,fit,backgrounds,shadows}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[pdftex,hidelinks,bookmarks=true,bookmarksnumbered=true]{hyperref}
+
+% Color definitions matching the sample seminar report
+\definecolor{reportred}{RGB}{180, 0, 0}
+\definecolor{reportteal}{RGB}{0, 102, 102}
+\definecolor{reportblue}{RGB}{20, 60, 120}
+
+% =========================================================================
+% CHAPTER AND SECTION FORMATTING (Clean, Robust Titlesec Configuration)
+% =========================================================================
+% Standard display shape for numbered chapters
+\titleformat{\chapter}[display]
+  {\normalfont\bfseries\centering}
+  {\large CHAPTER \thechapter}
+  {1ex}
+  {\Large\bfseries}
+\titlespacing*{\chapter}{0pt}{-15pt}{22pt}
+
+% Numberless chapters (e.g. REFERENCES)
+\titleformat{name=\chapter,numberless}[display]
+  {\normalfont\bfseries\centering}
+  {}
+  {0pt}
+  {\Large\bfseries}
+\titlespacing*{name=\chapter,numberless}{0pt}{-15pt}{22pt}
+
+% Section and subsection styling
+\titleformat{\section}
+  {\normalfont\large\bfseries}
+  {\thesection}
+  {1em}
+  {}
+\titlespacing*{\section}{0pt}{16pt}{8pt}
+
+\titleformat{\subsection}
+  {\normalfont\normalsize\bfseries}
+  {\thesubsection}
+  {1em}
+  {}
+\titlespacing*{\subsection}{0pt}{12pt}{6pt}
+
+\titleformat{\subsubsection}
+  {\normalfont\normalsize\bfseries\itshape}
+  {\thesubsubsection}
+  {1em}
+  {}
+\titlespacing*{\subsubsection}{0pt}{10pt}{4pt}
+
+% =========================================================================
+% TABLE OF CONTENTS & LIST FORMATTING (tocloft)
+% =========================================================================
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% Style TOC Title & Column Headers
+\renewcommand{\cfttoctitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftaftertoctitle}{%
+  \hfill\null\\[1.5em]
+  \noindent{\normalsize\bfseries CHAPTER\hfill TITLE\hfill PAGE NO}\par\vspace{-0.6em}
+}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{15pt}
+
+% Style LOT Title & Column Headers
+\renewcommand{\cftlottitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftafterlottitle}{%
+  \hfill\null\\[1.5em]
+  \noindent{\normalsize\bfseries TABLE NO\hfill TITLE\hfill PAGE NO}\par\vspace{-0.6em}
+}
+\setlength{\cftbeforelottitleskip}{0pt}
+\setlength{\cftafterlottitleskip}{15pt}
+
+% Style LOF Title & Column Headers
+\renewcommand{\cftloftitlefont}{\hfill\fontsize{14pt}{17pt}\selectfont\bfseries}
+\renewcommand{\cftafterloftitle}{%
+  \hfill\null\\[1.5em]
+  \noindent{\normalsize\bfseries FIGURE NO\hfill TITLE\hfill PAGE NO}\par\vspace{-0.6em}
+}
+\setlength{\cftbeforeloftitleskip}{0pt}
+\setlength{\cftafterloftitleskip}{15pt}
+
+% Dot leaders and indentation hierarchy matching sample report
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftsubsecleader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cfttableader}{\cftdotfill{\cftdotsep}}
+\renewcommand{\cftfigleader}{\cftdotfill{\cftdotsep}}
+
+\setlength{\cftchapnumwidth}{2.0em}
+\setlength{\cftsecindent}{2.0em}
+\setlength{\cftsecnumwidth}{2.6em}
+\setlength{\cftsubsecindent}{4.6em}
+\setlength{\cftsubsecnumwidth}{3.2em}
+
+% =========================================================================
+% RUNNING HEADERS & FOOTERS (Matching Sample Report)
+% =========================================================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\textit{\footnotesize AI Copilot for Response Medicine}}
+\fancyfoot[L]{\footnotesize Universal Engineering College}
+\fancyfoot[C]{\footnotesize \thepage}
+\fancyfoot[R]{\footnotesize Dept. of CSE}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+% Chapter opening pages use plain style (No running header, clean footer)
+\fancypagestyle{plain}{%
+  \fancyhf{}
+  \fancyfoot[L]{\footnotesize Universal Engineering College}
+  \fancyfoot[C]{\footnotesize \thepage}
+  \fancyfoot[R]{\footnotesize Dept. of CSE}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% Frontmatter style (No running header, centered Roman page number)
+\fancypagestyle{frontmatterstyle}{%
+  \fancyhf{}
+  \fancyfoot[C]{\footnotesize \thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+% =========================================================================
+% BEGIN DOCUMENT
+% =========================================================================
+\begin{document}
+
+% -------------------------------------------------------------------------
+% 1. COVER PAGE / TITLE PAGE
+% -------------------------------------------------------------------------
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+    \vspace*{0.2cm}
+    {\fontsize{18pt}{22pt}\selectfont \textbf{\textcolor{reportred}{AN ARTIFICIAL INTELLIGENCE COPILOT FOR FIRST RESPONSE MEDICINE}}\par}
+    
+    \vspace{1.2cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{A SEMINAR REPORT}\par}
+    
+    \vspace{0.8cm}
+    {\normalsize \textit{Submitted in partial fulfillment for the award of the Degree of}\par}
+    
+    \vspace{0.5cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{BACHELOR OF TECHNOLOGY}\par}
+    \vspace{0.15cm}
+    {\fontsize{11pt}{14pt}\selectfont \textbf{In}\par}
+    \vspace{0.15cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{COMPUTER SCIENCE AND ENGINEERING}\par}
+    \vspace{0.15cm}
+    {\fontsize{11pt}{14pt}\selectfont \textbf{(SEMESTER VII)}\par}
+    
+    \vspace{0.5cm}
+    {\fontsize{12pt}{15pt}\selectfont \textbf{2023--2027 Batch}\par}
+    
+    \vspace{0.6cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{APJ ABDUL KALAM TECHNOLOGICAL UNIVERSITY}\par}
+    
+    \vspace{0.8cm}
+    {\normalsize By\par}
+    \vspace{0.2cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{\textcolor{reportred}{RITHIKA K R (UNT22CS072)}}\par}
+    
+    \vspace{0.6cm}
+    % College Crest / Emblem (uec.jpg)
+    \includegraphics[width=3.2cm,height=3.2cm,keepaspectratio]{uec.jpg}
+    
+    \vspace{0.6cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{UNIVERSAL ENGINEERING COLLEGE}\par}
+    \vspace{0.15cm}
+    {\fontsize{11pt}{14pt}\selectfont \textbf{VALLIVATTOM, THRISSUR}\par}
+    
+    \vspace{0.6cm}
+    {\fontsize{12pt}{15pt}\selectfont \textbf{OCTOBER 2026}\par}
+\end{center}
+\end{titlepage}
+
+% -------------------------------------------------------------------------
+% 2. BONAFIDE CERTIFICATE PAGE
+% -------------------------------------------------------------------------
+\newpage
+\thispagestyle{empty}
+\begin{center}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{DEPARTMENT OF COMPUTER SCIENCE}\par}
+    \vspace{0.15cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{AND ENGINEERING}\par}
+    
+    \vspace{0.6cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{UNIVERSAL ENGINEERING COLLEGE}\par}
+    \vspace{0.15cm}
+    {\fontsize{11pt}{14pt}\selectfont \textbf{VALLIVATTOM, THRISSUR}\par}
+    
+    \vspace{0.6cm}
+    \includegraphics[width=2.5cm,height=2.5cm,keepaspectratio]{uec.jpg}
+    
+    \vspace{0.6cm}
+    {\fontsize{14pt}{17pt}\selectfont \textbf{\textcolor{reportteal}{BONAFIDE CERTIFICATE}}\par}
+\end{center}
+
+\vspace{0.8cm}
+\noindent
+This is to certify that the seminar report titled \textbf{\textcolor{reportred}{``AN ARTIFICIAL INTELLIGENCE COPILOT FOR FIRST RESPONSE MEDICINE''}} is the bonafide work of \textbf{\textcolor{reportred}{``RITHIKA K R (UNT22CS072)''}} during the semester VII in partial fulfillment of the requirements of APJ Abdul Kalam Technological University, under our supervision.
+
+\vspace{2.8cm}
+\noindent
+\begin{tabularx}{\textwidth}{@{}X X X@{}}
+\textbf{SEMINAR GUIDE} & \textbf{CO-ORDINATOR} & \textbf{HEAD OF THE DEPT.} \\[0.3cm]
+Ms. Abhirami K J & Dr. L C Manikandan & Ms. Nighila Ashok \\
+Assistant Professor & Professor & Associate Professor \\
+CSE Department & CSE Department & CSE Department
+\end{tabularx}
+
+\vspace{2.2cm}
+\noindent
+\textbf{Vallivattom}\par
+\noindent
+\textbf{15/10/2026}
+
+% -------------------------------------------------------------------------
+% 3. VISION & MISSION PAGE
+% -------------------------------------------------------------------------
+\newpage
+\thispagestyle{empty}
+\begin{center}
+    \includegraphics[width=2.2cm,height=2.2cm,keepaspectratio]{uec.jpg}\par
+    \vspace{0.3cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{UNIVERSAL ENGINEERING COLLEGE}\par}
+    \vspace{0.1cm}
+    {\fontsize{11pt}{14pt}\selectfont \textbf{VALLIVATTOM, THRISSUR, 680123}\par}
+    
+    \vspace{0.8cm}
+    {\fontsize{12pt}{15pt}\selectfont \textbf{DEPARTMENT OF COMPUTER SCIENCE AND}\par}
+    \vspace{0.1cm}
+    {\fontsize{12pt}{15pt}\selectfont \textbf{ENGINEERING}\par}
+    
+    \vspace{1.8cm}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{VISION}\par}
+\end{center}
+
+\vspace{0.4cm}
+\begin{center}
+\parbox{0.9\textwidth}{\centering Empower universally equipped computational technocrats having innovative entrepreneurial skills with holistic values.}
+\end{center}
+
+\vspace{1.8cm}
+\begin{center}
+    {\fontsize{13pt}{16pt}\selectfont \textbf{MISSION}\par}
+\end{center}
+
+\vspace{0.4cm}
+\begin{itemize}\setlength{\itemsep}{0.8em}
+    \item With well-experienced faculty members and excellent infrastructure, provide a way to equip universally acclaimed computational technocrats.
+    \item With institute-industry interaction, develop apt skills in entrepreneurship and innovativeness.
+    \item Provide value-based education to meet the technical and computational needs of society.
+\end{itemize}
+
+% -------------------------------------------------------------------------
+% 4. ACKNOWLEDGMENT PAGE (Roman Page i)
+% -------------------------------------------------------------------------
+\newpage
+\pagestyle{frontmatterstyle}
+\pagenumbering{roman}
+\setcounter{page}{1}
+\addcontentsline{toc}{chapter}{ACKNOWLEDGMENT}
+
+\begin{center}
+    {\fontsize{14pt}{17pt}\selectfont \textbf{ACKNOWLEDGMENT}\par}
+\end{center}
+
+\vspace{0.6cm}
+\noindent
+I wish to express my deep gratitude to everyone who helped me in the preparation of this seminar report on \textbf{``An Artificial Intelligence Copilot for First Response Medicine''} and in bringing it to a satisfactory conclusion.
+
+\vspace{0.4cm}
+\noindent
+First and foremost, I am grateful to God Almighty for His providence and guidance throughout the seminar.
+
+\vspace{0.4cm}
+\noindent
+I feel deeply honored and privileged to express my sincere gratitude to \textbf{Dr. Jose K Jacob}, Principal UEC, for his constant support and cooperation throughout the seminar preparation. I deeply appreciate the valuable advice and encouragement from \textbf{Ms. Nighila Ashok}, Head, CSE Department, which motivated me throughout this work.
+
+\vspace{0.4cm}
+\noindent
+I would like to express my heartfelt thanks to my guide and supervisor, \textbf{Ms. Abhirami K J}, Assistant Professor, CSE, for her insightful suggestions during the preparation of this seminar report. I am also indebted to \textbf{Dr. L C Manikandan}, Professor, CSE, my seminar coordinator, for his meticulous guidance and unwavering support.
+
+\vspace{0.4cm}
+\noindent
+I extend my heartfelt thanks to all the faculty members of the Computer Science and Engineering department for their suggestions and support in refining my seminar. Lastly, I express my deepest gratitude to my parents for their constant encouragement throughout this process.
+
+\vspace{1.5cm}
+\noindent
+\hfill \textbf{RITHIKA K R}
+
+% -------------------------------------------------------------------------
+% 5. ABSTRACT (Roman Page ii)
+% -------------------------------------------------------------------------
+\newpage
+\addcontentsline{toc}{chapter}{ABSTRACT}
+
+\begin{center}
+    {\fontsize{14pt}{17pt}\selectfont \textbf{ABSTRACT}\par}
+\end{center}
+
+\vspace{0.6cm}
+\noindent
+First responders and combat medics in emergency pre-hospital medicine routinely operate under austere, resource-constrained, and chaotic environments where senior expert medical consultation is unavailable, communication networks are severely compromised, and rapid decision-making directly dictates casualty survival. In such high-stress scenarios, procedural imprecision and cognitive overload significantly escalate the probability of adverse patient outcomes. This seminar report conducts an in-depth technical examination of an \textbf{Artificial Intelligence (AI) Copilot for First Response Medicine}, a cutting-edge multimodal framework engineered to deliver real-time procedural guidance, context-aware visual decision support, and objective surgical skill evaluation directly to frontline providers. The system architecture synthesizes an Augmented Reality (AR) headset (Microsoft HoloLens) for natural, hands-free interaction with a dedicated GPU-equipped edge microprocessor that executes all machine learning models locally. This edge-native topology ensures strict offline functionality, sub-second latency, and resilience in network-denied tactical operational environments. Trained and validated on the multimodal egocentric \textbf{Trauma THOMPSON} dataset---which encompasses both regular protocols and just-in-time (JIT) improvised techniques across five vital emergency interventions (cricothyroidotomy, intraosseous infusion, needle thoracostomy, tube thoracostomy, and tourniquet application)---the system executes five concurrent AI tasks: action recognition, proactive action anticipation, Visual Question Answering (VQA), surgical tool detection, and hand tracking-based skill evaluation. Comprehensive benchmarking reveals that the Multiscale Vision Transformer v2 (\textbf{MViTv2}) delivers benchmark-leading procedural guidance, attaining 89.75\% Top-5 accuracy in action recognition and 87.02\% Top-5 accuracy in anticipating forthcoming procedural actions. For conversational clinical decision support, the Bootstrapping Language-Image Pretraining (\textbf{BLIP}) model delivers 88.64\% VQA accuracy with a weighted F1-score of 1.0. The integrated \textbf{YOLOv11} framework exhibits robust performance, achieving a mean Average Precision (mAP@0.5) of 0.988 across 12 surgical tools and robust hand tracking across varied Personal Protective Equipment (PPE) glove colors. Utilizing a 4th-order tracking differentiator, 17 hand kinematic features are extracted, enabling a Random Forest classifier to distinguish expert from novice technique with 100\% classification accuracy, where SHAP analysis highlights velocity and acceleration as key discriminative indicators. By bridging the critical gap between expert-level (Role 4) surgical care and frontline (Role 1--2) first response, this edge AI copilot establishes a transformative paradigm for military trauma systems and civilian disaster response.
+
+\vspace{0.6cm}
+\noindent
+\textbf{Keywords:} Artificial Intelligence Copilot, First Response Medicine, Augmented Reality, Action Anticipation, Egocentric Computer Vision, Edge Computing, Hand Kinematics, Trauma Care.
+
+% -------------------------------------------------------------------------
+% 6. TABLE OF CONTENTS (Roman Pages iii - iv)
+% -------------------------------------------------------------------------
+\newpage
+\addcontentsline{toc}{chapter}{TABLE OF CONTENTS}
+\tableofcontents
+
+% -------------------------------------------------------------------------
+% 7. LIST OF TABLES (Roman Page v)
+% -------------------------------------------------------------------------
+\newpage
+\addcontentsline{toc}{chapter}{LIST OF TABLES}
+\listoftables
+
+% -------------------------------------------------------------------------
+% 8. LIST OF FIGURES (Roman Page vi)
+% -------------------------------------------------------------------------
+\newpage
+\addcontentsline{toc}{chapter}{LIST OF FIGURES}
+\listoffigures
+
+% -------------------------------------------------------------------------
+% 9. LIST OF ABBREVIATIONS (Roman Pages vii - viii)
+% -------------------------------------------------------------------------
+\newpage
+\addcontentsline{toc}{chapter}{LIST OF ABBREVIATIONS}
+
+\begin{center}
+    {\fontsize{14pt}{17pt}\selectfont \textbf{LIST OF ABBREVIATIONS}\par}
+\end{center}
+\vspace{0.6cm}
+\noindent
+\begin{longtable}{@{}p{2.5cm} p{11.5cm}@{}}
+AA & Average Acceleration \\
+AI & Artificial Intelligence \\
+AJ & Average Jerk \\
+AR & Augmented Reality \\
+AV & Average Velocity \\
+BLIP & Bootstrapping Language-Image Pretraining \\
+CFL & Cyclical Focal Loss \\
+COCO & Common Objects in Context \\
+CR & Cricothyroidotomy \\
+CSRT & Channel and Spatial Reliability Tracking \\
+CT & Tube Thoracostomy (Chest Tube) \\
+DoD & Department of Defense \\
+FHE & Fully Homomorphic Encryption \\
+GPU & Graphics Processing Unit \\
+HIE & Health Information Exchange \\
+HIoT & Health Internet of Things \\
+HoloLens & Microsoft Optical See-Through Mixed Reality Headset \\
+IO & Intraosseous Infusion \\
+JIT & Just-In-Time (Improvised Procedure) \\
+LaViLa & Language-Guided Video Learning \\
+LLM & Large Language Model \\
+LTS & Long Term Support \\
+mAP & Mean Average Precision \\
+MAMC & Madigan Army Medical Center \\
+MICCAI & Medical Image Computing and Computer Assisted Intervention \\
+MRTK & Microsoft Mixed Reality Toolkit \\
+MViTv2 & Multiscale Vision Transformers version 2 \\
+ND & Needle Thoracostomy (Needle Decompression) \\
+OR & Operating Room \\
+OT & Operative Time \\
+PL & Path Length \\
+PPE & Personal Protective Equipment \\
+PVH & High Velocity Percentage \\
+PVI & Idle Velocity Percentage \\
+PVL & Low Velocity Percentage \\
+PVM & Medium Velocity Percentage \\
+RF & Random Forest \\
+SGD & Stochastic Gradient Descent \\
+SHAP & SHapley Additive exPlanations \\
+TCCC & Tactical Combat Casualty Care \\
+TD & Tracking Differentiator \\
+TimeSformer & Time-Space Transformer for Video Recognition \\
+TQ & Tourniquet Application \\
+t-SNE & t-Distributed Stochastic Neighbor Embedding \\
+UniFormer & Unified Spatiotemporal Transformer \\
+VideoMAE & Video Masked Autoencoder \\
+VideoSwin & Video Swin Transformer \\
+ViLT & Vision-and-Language Transformer \\
+VLM & Vision-Language Model \\
+VQA & Visual Question Answering \\
+VR & Virtual Reality
+\end{longtable}
+
+% =========================================================================
+% CHAPTER 1: INTRODUCTION (Arabic Page 1)
+% =========================================================================
+\newpage
+\pagestyle{fancy}
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\chapter{INTRODUCTION}
+
+During emergency pre-hospital medical care and frontline tactical operations, combat medics and first responders provide decisive, life-saving interventions under extreme environmental duress [1, 3]. Severe traumatic injuries sustained in battlefield operations, mass-casualty incidents, and natural disasters demand rapid clinical stabilization within the critical ``golden hour.'' Interventions such as emergency airway management via surgical cricothyroidotomy, vascular access via intraosseous infusion, tension pneumothorax alleviation via needle or tube thoracostomy, and severe extremity hemorrhage control via arterial tourniquets must be executed swiftly and flawlessly [3, 18]. Under these austere circumstances, procedural precision directly dictates casualty survival and prevents long-term morbidity.
+
+Despite the critical nature of these interventions, medical personnel operating in forward or pre-hospital echelons confront profound systemic obstacles [1, 2]. First responders and combat medics often possess basic or intermediate emergency training and are rarely fully credentialed trauma surgeons [1]. Yet, they routinely face highly complex, life-threatening polytrauma injuries that would challenge experienced surgical teams in tertiary medical facilities [2, 3]. In standard civilian trauma ecosystems, less-experienced clinicians can rely on immediate peer consultation, specialized senior surgical oversight, and continuous access to institutional reference manuals. In contrast, forward-deployed combat medics and humanitarian first responders operate in complete clinical isolation.
+
+Historically, the standard technological paradigm proposed to bridge this clinical knowledge gap has been telemedicine and video-assisted telementoring [1, 4]. By streaming live audio and video from the point of care to a tertiary medical installation (Role 4 definitive care hospital), remote medical specialists can observe the patient and verbally mentor the on-scene medic through complex interventions [4, 8]. However, operational reality in combat deployments and disaster zones systematically invalidates the core premises of telemedical architectures [1, 8]. Austere operational settings are defined by Denied, Degraded, Intermittent, or Latent (DDIL) communication networks. Hostile electronic warfare jamming, destroyed physical telecommunication towers, harsh terrain obstruction, and saturated radio channels severely compromise network stability [1, 3]. When communication bandwidth collapses or latency exceeds critical thresholds, conventional telemedicine fails entirely, leaving frontline responders without guidance at the exact moment life-and-death decisions must be made.
+
+To overcome the fragility of telecommunication dependencies, research has focused on artificial intelligence (AI) and mixed reality paradigms [5, 14]. While significant advances have been achieved in AI-driven surgical navigation and robotics within standard operating rooms (OR) [5, 6], these systems are fundamentally unsuited for pre-hospital trauma care. Operating room assistants rely on massive static computational towers, controlled lighting, predictable anatomical configurations, and stable cloud infrastructure [8, 10]. In contrast, first response medicine requires a lightweight, wearable, and self-contained system capable of executing complex vision and reasoning models locally on edge hardware with zero network connectivity [1, 8].
+
+Furthermore, medical personnel performing invasive trauma interventions experience immense psychological stress and high cognitive workloads [12]. Introducing an AI guidance interface must not exacerbate cognitive burdens through cluttered visual displays, cumbersome manual inputs, or distracting alerts [12]. Interaction must be natural, hands-free, and context-aware, allowing medics to maintain physical contact with the patient and surgical tools at all times [14, 16].
+
+To address this persistent operational divide, this seminar report presents a comprehensive technical examination of an \textbf{Artificial Intelligence (AI) Copilot for First Response Medicine} [Zhuo et al., 2026]. Engineered specifically for Role 1 and Role 2 medical care, the proposed copilot integrates an Augmented Reality (AR) headset with a wearable edge-native GPU microprocessor to deliver real-time, offline procedural mentorship. 
+
+\vspace{0.4cm}
+\noindent
+The core contributions and functional scope examined in this report include:
+\begin{enumerate}\setlength{\itemsep}{0.6em}
+    \item \textbf{Edge-Native Computing Architecture:} An autonomous edge computing design that integrates a commercial Microsoft HoloLens AR headset with a local dedicated GPU microprocessor, executing all deep learning inference offline with sub-second latency and zero cloud dependency.
+    \item \textbf{Multimodal Egocentric Dataset (Trauma THOMPSON):} Utilization and fine-tuning on a specialized benchmark containing both standard medical protocols and unscripted Just-In-Time (JIT) improvised techniques across five critical trauma interventions.
+    \item \textbf{Proactive Procedural Mentorship:} Integration of spatiotemporal Multiscale Vision Transformers (MViTv2) capable of simultaneously recognizing current surgical steps (89.75\% Top-5 accuracy) and anticipating future actions (87.02\% Top-5 accuracy) before being explicitly prompted.
+    \item \textbf{Context-Aware Visual Decision Support:} Implementation of multimodal Vision-Language Models (BLIP) delivering 88.64\% accuracy on clinical Visual Question Answering (VQA) to address non-procedural anatomical and pharmacological queries in real time.
+    \item \textbf{Intraoperative Safety \& Logistic Tracking:} Deployment of YOLOv11 for near-perfect surgical instrument detection (mAP@0.5 of 0.988) across 12 tools and robust hand tracking across diverse Personal Protective Equipment (PPE) glove colors.
+    \item \textbf{Objective Kinematic Skill Evaluation:} Extraction of 17 bimanual motion features processed via a 4th-order tracking differentiator and classified with a Random Forest model, achieving 100\% accuracy in separating expert and novice techniques, interpreted through SHAP analysis.
+\end{enumerate}
+
+The remainder of this seminar report is organized as follows: Chapter 2 provides an exhaustive analysis of system architecture, dataset engineering, deep learning models, experimental benchmarks, and operational human factors. Chapter 3 concludes the report and delineates strategic future research trajectories.
+
+% =========================================================================
+% CHAPTER 2: AI COPILOT FOR FIRST RESPONSE MEDICINE (Arabic Page 3)
+% =========================================================================
+\newpage
+\chapter{AI COPILOT FOR FIRST RESPONSE MEDICINE}
+
+\section{INTRODUCTION \& SYSTEM TAXONOMY}
+
+The integration of artificial intelligence and spatial computing into emergency medical environments represents a fundamental paradigm shift in combat casualty care and pre-hospital medicine [1, 4]. Traditionally, clinical guidance has relied either on rigid static documentation or direct human mentorship. In pre-hospital operational settings, both modalities encounter severe limitations. Static paper pocket guides and manuals are unusable during rapid, high-acuity interventions, while remote human mentorship is frequently thwarted by network degradation [1, 8].
+
+\subsection{Evolution of Surgical Telementoring \& Copilots}
+Surgical telementoring began with simple two-way audiovisual channels connecting operating suites to remote academic medical centers [1, 4]. While tele-mentoring expanded surgical reach, early systems suffered from severe telestration lag and lack of spatial awareness [4, 9]. The subsequent introduction of Virtual Reality (VR) and Augmented Reality (AR) enabled 3D anatomical overlays and interactive needle trajectory projections [14, 17]. For example, the Virtual Operative Assistant demonstrated the feasibility of providing explainable feedback during simulated neurosurgical resections [16]. 
+
+However, existing systems were built under the assumption of stable operating room infrastructure with continuous cloud access and high-end workstation clusters [5, 8]. Developing an AI copilot tailored for first response medicine requires transitioning from cloud-dependent telepresence to fully autonomous, edge-native machine intelligence [1, 8].
+
+\subsection{Austere \& Battlefield Operational Constraints}
+Military trauma doctrine organizes casualty care into four distinct echelons or ``Roles'' of medical support [1, 3]:
+\begin{itemize}\setlength{\itemsep}{0.4em}
+    \item \textbf{Role 1 (First Responder \& Battalion Aid Station):} Immediate point-of-injury care, tactical field care, and initial triage administered by combat medics or corpsmen under hostile conditions with minimal equipment.
+    \item \textbf{Role 2 (Forward Surgical Care):} Mobile forward resuscitation surgical teams capable of emergency damage control surgery, limited blood transfusions, and basic postoperative holding.
+    \item \textbf{Role 3 (Field or Combat Support Hospital):} Resuscitation, initial wound surgery, and definitive damage control surgery with intensive care units and radiological infrastructure.
+    \item \textbf{Role 4 (Definitive Medical Center):} Fully equipped hospital installations (e.g., Walter Reed, Landstuhl) offering subspecialty surgery, intensive rehabilitation, and comprehensive reconstructive procedures.
+\end{itemize}
+
+Frontline morbidity is overwhelmingly concentrated at Role 1 and Role 2 echelons, where non-specialist medics must execute complex procedures under severe duress [3]. Table 2.1 presents a multi-dimensional system comparison contrasting standard hospital surgical robots, telemedical systems, and the proposed autonomous AR AI Copilot across operational parameters.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparative Paradigm Analysis: Surgical Robots vs. Telemedicine vs. Edge AI Copilot}
+\label{tab:paradigm_comparison}
+\small
+\begin{tabularx}{\textwidth}{@{}p{3.2cm} p{3.8cm} p{3.8cm} X@{}}
+\toprule
+\textbf{Operational Parameter} & \textbf{In-Hospital Surgical Robotics} & \textbf{Conventional Telemedicine} & \textbf{Autonomous Edge AI Copilot} \\
+\midrule
+\textbf{Target Setting} & Controlled Operating Room (Role 3--4) & Rural Clinic / Stable Clinic & Austere / Field / Combat (Role 1--2) \\
+\textbf{Network Dependency} & High-Speed Fiber / Dedicated LAN & High-Bandwidth WAN & Completely Offline / Disconnected \\
+\textbf{Hardware Setup} & Multi-Rack Stationary Workstations & Remote Server Cluster + Display & Wearable AR Headset + Edge GPU \\
+\textbf{User Interaction} & Console Joysticks / Foot Pedals & Screen Telestration / Voice Call & Hands-Free Mixed Reality HUD \\
+\textbf{Decision Paradigm} & Tele-operated / Pre-programmed & Remote Human Specialist Advice & Autonomous Proactive AI Mentorship \\
+\textbf{Latency Profile} & Low ($<$10 ms, local LAN) & Variable / High (200--1500 ms) & Deterministic Sub-Second ($<$50 ms) \\
+\textbf{Operational Resilience} & Power Grid Dependent & Vulnerable to Jamming / Link Loss & Self-Contained Battery \& Edge Execution \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% -------------------------------------------------------------------------
+\section{SYSTEM ARCHITECTURE \& HARDWARE DESIGN}
+
+The AI Copilot is engineered from the ground up to satisfy the stringent physical and operational constraints of combat trauma care. The design balances computational throughput against physical mobility, battery endurance, and thermal dissipation.
+
+\subsection{Edge-Native Processing Topology}
+To ensure deterministic execution in network-denied tactical environments, all computer vision models, language transformers, and kinematic tracking engines are executed locally on an edge microprocessor [8]. The system decouples optical display rendering from heavy tensor computations:
+\begin{enumerate}
+    \item \textbf{Display \& Sensor Headset:} A commercial Microsoft HoloLens optical see-through AR headset captures real-time egocentric video (30 fps, $1920\times1080$ resolution) and directional microphone audio. It renders real-time 3D bounding boxes, instructional step notifications, and conversational VQA text directly onto the medic's field of view.
+    \item \textbf{Edge GPU Microprocessor:} A dedicated edge processor equipped with high-efficiency tensor cores connects directly to the headset via a low-latency, shielded high-bandwidth interface. The microprocessor hosts the deep learning runtime environment, performing parallel inference across multiple neural pipelines.
+\end{enumerate}
+
+\subsection{Augmented Reality Headset \& Hands-Free Interaction}
+During emergency procedures, the medic's hands are contaminated with bodily fluids, occupied with surgical scalpels or catheters, and constrained by sterile technique [14, 16]. Any interface requiring physical touch or handheld tablets introduces severe infection risks and unacceptable procedural delays [12].
+
+The AR software application was custom-developed using Unity 2020.3.0 (Long Term Support -- LTS) and Microsoft Mixed Reality Toolkit (MRTK) versions 1 and 2. MRTK provides spatial head-tracking, voice-command listening trees, and gaze-contingent interface anchors. The optical see-through display superimposes digital information directly over the patient's anatomical landmarks without occluding the medic's natural peripheral vision, preserving situational awareness.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth, keepaspectratio]{fig one.png}
+\caption{Artificial Intelligence Copilot System Overview.}
+\label{fig:system_architecture}
+\end{figure}
+
+\subsection{Five Real-Time Multimodal Guidance Pipelines}
+As visualized in Figure~\ref{fig:system_architecture}, the copilot executes five real-time computing pipelines concurrently:
+\begin{enumerate}
+    \item \textbf{Action Recognition:} Analyzes temporal egocentric video buffers to classify the active operational action being performed, verifying alignment with clinical guidelines.
+    \item \textbf{Proactive Action Anticipation:} Predicts the immediate subsequent procedural step before the provider executes it, proactively cueing necessary instruments or warnings without waiting for explicit queries.
+    \item \textbf{Visual Question Answering (VQA):} Ingests verbal natural language queries and synchronized camera frames, providing instant synthesized spoken and textual answers regarding anatomical landmarks, dosage calculations, and equipment specifications.
+    \item \textbf{Surgical Tool Detection:} Localizes, classifies, and counts 12 distinct medical instruments within the field of view, detecting omissions, tool drops, or retained surgical items.
+    \item \textbf{Hand Tracking \& Skill Evaluation:} Tracks bimanual motion trajectories across diverse glove colors, processing centroids through high-order differentiators to provide quantitative technique proficiency scoring.
+\end{enumerate}
+
+Figure~\ref{fig:demonstration} demonstrates the multimodal AI Copilot in action across sequential egocentric trauma video frames, displaying real-time predictions for action recognition, proactive action anticipation, surgical tool bounding boxes, and bimanual hand tracking.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\textwidth, keepaspectratio]{fig 2.png}
+\caption{Demonstration of the Artificial Intelligence Copilot on Action Recognition, Action Anticipation, Hand Tracking, and Object Detection.}
+\label{fig:demonstration}
+\end{figure}
+
+% -------------------------------------------------------------------------
+\section{DATASET CHARACTERISTICS: TRAUMA THOMPSON}
+
+The development and technical validation of deep learning models for operational medicine critically require high-fidelity training data that reflects the chaotic realities of trauma interventions [18]. Generic computer vision datasets (e.g., ImageNet, Kinetics-400) capture third-person, unconstrained actions that do not translate to first-person surgical tasks.
+
+\subsection{Five Essential Emergency Medical Procedures}
+The AI Copilot is trained on the open-source \textbf{Trauma THOMPSON Dataset} [18], an egocentric benchmark capturing five time-critical emergency trauma interventions:
+\begin{enumerate}
+    \item \textbf{Cricothyroidotomy (CR):} An emergency surgical airway puncture performed through the cricothyroid membrane when endotracheal intubation is impossible due to massive maxillofacial trauma or airway obstruction.
+    \item \textbf{Intraosseous Infusion (IO):} Establishing vascular access by drilling directly into the bone marrow cavity (proximal tibia or humeral head) when hypovolemic shock collapses peripheral veins.
+    \item \textbf{Needle Thoracostomy (ND):} Rapid decompression of a life-threatening tension pneumothorax by inserting a large-bore needle catheter into the second or fifth intercostal space.
+    \item \textbf{Tube Thoracostomy (CT):} Insertion of a chest tube into the pleural cavity to evacuate large hemothoraces or persistent pneumothoraces.
+    \item \textbf{Tourniquet Application (TQ):} Rapid arterial occlusion using windlass or ratcheting tourniquets to arrest life-threatening extremity exsanguination.
+\end{enumerate}
+
+\subsection{Standard Protocols vs. Just-In-Time (JIT) Techniques}
+A unique attribute of the Trauma THOMPSON benchmark is its deliberate inclusion of both standard institutional protocols and unscripted \textbf{Just-In-Time (JIT)} improvised procedures [18]. In austere battlefield scenarios, standard surgical kits are frequently depleted or lost. Providers must innovate using field expedients---such as employing utility scissors or pocketknives for incisions, using ballpoint pen casings for emergency airway tubes, or fashioning tourniquets from tactical belts and wooden dowels. 
+
+While JIT techniques are contextually restricted to extreme emergency settings, training the AI copilot on these variants ensures that the computer vision models do not collapse when non-standard instruments or atypical hand poses appear. Table 2.2 delineates the structural composition of the dataset.
+
+\begin{table}[htbp]
+\centering
+\caption{Trauma THOMPSON Dataset Structure and Annotation Characteristics}
+\label{tab:dataset_breakdown}
+\small
+\begin{tabularx}{\textwidth}{@{}l X X X@{}}
+\toprule
+\textbf{Dataset Parameter} & \textbf{Standard Protocols} & \textbf{Just-In-Time (JIT) Methods} & \textbf{Total / Aggregate} \\
+\midrule
+\textbf{Captured Video Count} & 177 Videos & Variable unscripted sessions & 212+ Video Sequences \\
+\textbf{Verb Classes} & 42 Classes & 28 Classes & 70 Unique Verbs \\
+\textbf{Noun (Object) Classes} & 42 Classes & 32 Classes & 74 Unique Nouns \\
+\textbf{Action Combinations} & 124 Action Classes & 86 Action Classes & 210 Action Combinations \\
+\textbf{VQA Query-Answer Pairs} & Video-frame derived & Multimodal egocentric QA & 8,000,000 Pairs \\
+\textbf{Hand Tracking Annotations} & 30 Videos (60,000 Frames) & Bimanual (Left/Right) & Blue, Gray, Black Gloves \\
+\textbf{Tool Detection Annotations} & 35 Videos (25,000 Frames) & 12 Tracked Instrument Classes & CSRT Semi-Supervised \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Bimanual Hand \& Surgical Tool Annotations}
+To enable fine-grained tool detection and skill assessment, the authors augmented the raw video repository with extensive bounding-box annotations:
+\begin{itemize}
+    \item \textbf{Bimanual Separation:} Annotations explicitly separate the left hand from the right hand, which is vital for evaluating bimanual dexterity and instrumental coordination.
+    \item \textbf{Personal Protective Equipment (PPE) Diversity:} Annotations cover bare hands as well as blue, gray, and black nitrile/latex sterilized gloves. Standard hand detectors trained on bare skin fail completely when surgical gloves alter chromatic and reflective characteristics.
+    \item \textbf{Twelve Surgical Instruments:} Detailed bounding boxes track 12 tools: tourniquet, label, windlass, needle case, wipe, tape, scissors, needle, catheter, kelly clamp, scalpel, and chest tube.
+    \item \textbf{CSRT Semi-Supervised Pipeline:} Annotations were generated via a human-in-the-loop paradigm: manual bounding boxes established at 1-second keyframe intervals were automatically propagated using Channel and Spatial Reliability Tracking (CSRT) [19], followed by expert review and deletion of bad frames.
+\end{itemize}
+
+% -------------------------------------------------------------------------
+\section{CORE ALGORITHMIC FRAMEWORKS}
+
+\subsection{Action Recognition \& Proactive Anticipation}
+Procedural mentorship requires understanding what the medic is currently doing and predicting what they must do next. The system formulates action recognition as assigning a probability distribution over action classes $\mathcal{A} = \{a_1, a_2, \dots, a_C\}$ given a past video clip $V_{\text{past}} = \{f_{t-\tau}, \dots, f_t\}$:
+\begin{equation}
+    P(a_{\text{current}} \mid V_{\text{past}}) = \text{Softmax}(\mathbf{W}_r \cdot \Phi_{\text{backbone}}(V_{\text{past}}))
+\end{equation}
+Conversely, proactive action anticipation predicts the future action $a_{\text{next}}$ occurring at time $t + \Delta t$, conditioning solely on observations up to time $t$:
+\begin{equation}
+    P(a_{\text{next}} \mid V_{\text{past}}) = \text{Softmax}(\mathbf{W}_a \cdot \Phi_{\text{backbone}}(V_{\text{past}}))
+\end{equation}
+
+Six state-of-the-art spatio-temporal video architectures were evaluated:
+\begin{enumerate}
+    \item \textbf{VideoSwin [20]:} Employs shifted local 3D attention windows to restrict self-attention computations while maintaining cross-window connectivity.
+    \item \textbf{TimeSformer [21]:} Factorizes space-time attention into decoupled spatial self-attention and temporal self-attention across video patch tokens.
+    \item \textbf{UniFormerV2 [22]:} Combines multi-head local 3D convolutions in early stages with global spatiotemporal self-attention transformers in deeper layers.
+    \item \textbf{VideoMAE [23]:} Utilizes self-supervised masked autoencoding with exceptionally high masking ratios (90\%) to pretrain video transformers.
+    \item \textbf{MViTv2 [24]:} Multiscale Vision Transformers that progressively expand channel dimensions while pooling spatial and temporal resolutions across hierarchical stages, incorporating decomposed relative positional embeddings.
+    \item \textbf{LaViLa [25]:} Leverages large language models to re-narrate egocentric video clips, distilling vision-language representations into video backbones.
+\end{enumerate}
+
+Models were pretrained on Kinetics-400 and fine-tuned on the Trauma THOMPSON dataset using an NVIDIA GeForce RTX 4090 Ti. Random oversampling of underrepresented procedural actions was applied to mitigate real-world class frequency imbalances.
+
+\subsection{Context-Aware Visual Question Answering (VQA)}
+While step-by-step guidance assists procedural sequences, emergency providers often encounter non-sequential clinical questions, such as verifying anatomical puncture sites or dosage limits. The copilot incorporates the \textbf{BLIP (Bootstrapping Language-Image Pretraining)} architecture [26].
+
+BLIP integrates a Vision Transformer (ViT) that decomposes egocentric camera frame $I$ into image patches $v_i$, a text encoder processing query tokens $Q = \{w_1, \dots, w_m\}$, and a multimodal cross-attention fusion module. The cross-attention layer aligns textual query embeddings with visual image patch tokens:
+\begin{equation}
+    \mathbf{h}_{\text{cross}} = \text{Softmax}\left(\frac{(\mathbf{Q}_{\text{text}}\mathbf{W}_Q)(\mathbf{K}_{\text{vis}}\mathbf{W}_K)^T}{\sqrt{d_k}}\right)(\mathbf{V}_{\text{vis}}\mathbf{W}_V)
+\end{equation}
+BLIP was benchmarked against the Vision-and-Language Transformer (\textbf{ViLT}) [27] and \textbf{Florence-2} [28].
+
+\subsection{Surgical Tool Detection via YOLOv11}
+Real-time instrument detection must operate with high frame rates on edge hardware. The system utilizes the \textbf{YOLOv11} single-stage detector [29]. The model was trained for 200 epochs using Stochastic Gradient Descent (SGD) with momentum, cosine learning rate decay, and data augmentations (random cropping, horizontal flips, brightness perturbations).
+
+The optimization loss function incorporates bounding box regression loss $\mathcal{L}_{\text{box}}$, objectness loss $\mathcal{L}_{\text{obj}}$, and \textbf{Cyclical Focal Loss (CFL)} $\mathcal{L}_{\text{CFL}}$:
+\begin{equation}
+    \mathcal{L}_{\text{total}} = \lambda_{\text{box}} \mathcal{L}_{\text{box}} + \lambda_{\text{obj}} \mathcal{L}_{\text{obj}} + \lambda_{\text{CFL}} \mathcal{L}_{\text{CFL}}
+\end{equation}
+Cyclical Focal Loss dynamically modulates the focal focusing parameter $\gamma_t$ cyclically across training epochs, preventing gradient dominance from repetitive background frames:
+\begin{equation}
+    \mathcal{L}_{\text{CFL}} = -\alpha_t (1 - p_t)^{\gamma(t)} \log(p_t), \quad \gamma(t) = \gamma_{\text{base}} + \Delta \gamma \cdot \left|\sin\left(\frac{\pi t}{T_{\text{cycle}}}\right)\right|
+\end{equation}
+
+\subsection{Hand Tracking \& Kinematic Differentiation}
+Hand detection bounding boxes predicted by YOLOv11 produce centroid coordinates $(x_t, y_t)$ for each hand. Because raw frame-by-frame object detections suffer from discrete jitter, directly computing derivatives via finite differences amplifies high-frequency noise.
+
+To extract reliable velocity, acceleration, and jerk profiles, the coordinates are filtered using a \textbf{4th-order Tracking Differentiator (TD)} [30]. The continuous state-space tracking differentiator is formulated as:
+\begin{equation}
+    \begin{aligned}
+        \dot{z}_1 &= z_2 \\
+        \dot{z}_2 &= z_3 \\
+        \dot{z}_3 &= z_4 \\
+        \dot{z}_4 &= -R^4 \left[ c_1(z_1 - x(t)) + c_2 \frac{z_2}{R} + c_3 \frac{z_3}{R^2} + c_4 \frac{z_4}{R^3} \right]
+    \end{aligned}
+\end{equation}
+where $z_1(t)$ tracks filtered position, $z_2(t)$ estimates velocity $v(t)$, $z_3(t)$ estimates acceleration $a(t)$, $z_4(t)$ tracks jerk $j(t)$, $R$ governs differentiation speed, and $c_1, \dots, c_4$ are stability coefficients.
+
+\subsection{Objective Skill Classification \& SHAP Interpretability}
+From the filtered bimanual kinematic trajectories, 17 distinct statistical features are extracted based on surgical motion analysis literature [31]:
+\begin{equation}
+    \mathbf{F} = \Big[ PL_x, PL_y, PVI_x, PVI_y, PVL_x, PVL_y, PVM_x, PVM_y, PVH_x, PVH_y, AV_x, AV_y, AA_x, AA_y, AJ_x, AJ_y, OT \Big]^T
+\end{equation}
+where:
+\begin{itemize}
+    \item $PL_x, PL_y$: Cumulative path length along Cartesian axes: $PL = \sum_{t=1}^{T-1} |z_1(t+1) - z_1(t)|$.
+    \item $PVI, PVL, PVM, PVH$: Percentage of operative time spent in idle, low, medium, and high velocity brackets.
+    \item $AV, AA, AJ$: Average velocity, average acceleration, and average jerk magnitude.
+    \item $OT$: Total procedure operative time.
+\end{itemize}
+
+A \textbf{Random Forest (RF)} classifier (ensemble of 100 decision trees) was trained on 20 videos to separate ``expert'' from ``novice'' surgical technique. Model interpretability is established via \textbf{SHapley Additive exPlanations (SHAP)} [32], computing the marginal contribution $\phi_i$ of each kinematic feature across all feature subsets $S \subseteq F \setminus \{i\}$:
+\begin{equation}
+    \phi_i(f, x) = \sum_{S \subseteq F \setminus \{i\}} \frac{|S|!(|F| - |S| - 1)!}{|F|!} \Big[ f(S \cup \{i\}) - f(S) \Big]
+\end{equation}
+
+Figure~\ref{fig:skill_evaluation} presents the skill proficiency evaluation from the base research paper, demonstrating the relative SHAP kinematic importance rankings and 2D t-SNE projection confirming clear separation between expert and novice surgical cohorts.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.88\textwidth, keepaspectratio]{fig 3.png}
+\caption{Skill Proficiency Evaluation of Expert Versus Novice: (a) Explanation of Results by SHAP Values and (b) t-SNE Visualization.}
+\label{fig:skill_evaluation}
+\end{figure}
+
+% -------------------------------------------------------------------------
+\section{EXPERIMENTAL RESULTS \& PERFORMANCE ANALYSIS}
+
+The AI Copilot was empirically validated on the Trauma THOMPSON benchmark across its five core computer vision and reasoning tasks.
+
+\subsection{Action Recognition and Anticipation Benchmarking}
+Table 2.3 provides the complete experimental comparison of the six evaluated vision and vision-language architectures across the five emergency medical procedures using an 80/20 train/test data split.
+
+\begin{table}[htbp]
+\centering
+\caption{Performance Comparison of 6 Vision Models for Action Recognition and Anticipation Accuracy (\%) on 5 Emergency Procedures Under Regular Settings}
+\label{tab:action_benchmark}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}l l r r r r r r r@{}}
+\toprule
+\textbf{Model Architecture} & \textbf{Task Mode} & \textbf{CR Top-1} & \textbf{CT Top-1} & \textbf{IO Top-1} & \textbf{ND Top-1} & \textbf{TQ Top-1} & \textbf{Avg Top-1} & \textbf{Avg Top-5} \\
+\midrule
+VideoSwin [20]    & Recognition  & 52.58 & 20.66 & 63.33 & 62.37 & 44.44 & 45.10 & 74.52 \\
+TimeSformer [21]  & Recognition  & 40.72 & 15.02 & 47.50 & 38.71 & 22.22 & 31.91 & 62.81 \\
+VideoMAE [23]     & Recognition  & 49.48 & 23.47 & 64.17 & 48.39 & 44.44 & 43.34 & 71.89 \\
+UniFormerV2 [22]  & Recognition  & 68.56 & 39.44 & 68.33 & \textbf{83.87} & 57.14 & 60.47 & 85.65 \\
+\textbf{MViTv2 [24]} & \textbf{Recognition} & \textbf{69.59} & \textbf{47.42} & \textbf{74.17} & 81.72 & \textbf{74.60} & \textbf{65.59} & \textbf{89.75} \\
+LaViLa [25]       & Recognition  & 50.52 & 20.66 & 61.67 & 59.14 & 46.03 & 42.52 & 68.81 \\
+\midrule
+VideoSwin [20]    & Anticipation & 49.73 & 17.96 & 53.51 & 50.59 & 43.64 & 39.88 & 69.24 \\
+TimeSformer [21]  & Anticipation & 37.97 & 8.74  & 42.98 & 25.88 & 43.64 & 28.44 & 59.97 \\
+VideoMAE [23]     & Anticipation & 49.73 & 19.42 & 54.39 & 58.82 & 41.82 & 41.42 & 69.24 \\
+UniFormerV2 [22]  & Anticipation & \textbf{67.38} & 31.55 & 64.04 & \textbf{78.82} & 60.00 & 56.25 & 84.70 \\
+\textbf{MViTv2 [24]} & \textbf{Anticipation} & 65.24 & \textbf{37.38} & \textbf{73.68} & \textbf{78.82} & \textbf{70.91} & \textbf{60.12} & \textbf{87.02} \\
+LaViLa [25]       & Anticipation & 48.13 & 18.45 & 52.63 & 48.24 & 40.00 & 38.79 & 67.85 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The empirical benchmarks demonstrate that \textbf{MViTv2} outperforms all competing models across both tasks:
+\begin{itemize}
+    \item \textbf{Action Recognition Leadership:} MViTv2 achieves an overall average Top-1 accuracy of 65.59\% and a Top-5 accuracy of 89.75\%. It exhibits exceptional reliability on high-stakes vascular and airway procedures: Intraosseous Infusion (74.17\% Top-1), Tourniquet Application (74.60\% Top-1), and Needle Thoracostomy (81.72\% Top-1).
+    \item \textbf{Proactive Anticipation Excellence:} In predicting the subsequent procedural action, MViTv2 leads with 60.12\% average Top-1 and 87.02\% average Top-5 accuracy. Its anticipation accuracy reaches 73.68\% for IO and 70.91\% for TQ.
+    \item \textbf{Procedure Acuity Variance:} Tube Thoracostomy (CT) demonstrated the lowest absolute accuracy across all models (MViTv2 reached 47.42\% in recognition and 37.38\% in anticipation). This reflects the high procedural variability, deep pleural cavity occlusions, and diverse anatomical presentations inherent to chest tube insertion.
+    \item \textbf{Architecture Insights:} Pure space-time factorized attention without multiscale pooling (TimeSformer) performed poorly (31.91\% Top-1 recognition), whereas multiscale pyramidal pooling (MViTv2) effectively captured fine-grained surgical instrument maneuvers.
+\end{itemize}
+
+\subsection{VQA Decision Support Performance}
+Visual Question Answering models were evaluated on clinical queries derived from procedural video keyframes. Table 2.4 summarizes the comparative accuracy and weighted F1-score.
+
+\begin{table}[htbp]
+\centering
+\caption{Clinical Visual Question Answering (VQA) Model Benchmarks}
+\label{tab:vqa_benchmark}
+\small
+\begin{tabularx}{0.85\textwidth}{@{}l c c X@{}}
+\toprule
+\textbf{Model Framework} & \textbf{Accuracy (\%)} & \textbf{Weighted F1-Score} & \textbf{Pretraining Architecture} \\
+\midrule
+ViLT [27] & 79.88\% & 0.94 & Patch-based Vision Transformer + Text \\
+Florence-2 [28] & 87.86\% & 1.00 & Unified Vision Foundation Representation \\
+\textbf{BLIP [26]} & \textbf{88.64\%} & \textbf{1.00} & \textbf{Multimodal Vision-Text Cross-Attention} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The BLIP model achieved the highest clinical VQA performance (88.64\% accuracy, 1.0 weighted F1-score). In life-critical trauma scenarios, high F1 scores confirm that model responses are not only syntactically plausible but clinically valid, providing reliable support when consulting manuals is impossible.
+
+\subsection{Tool Detection and Multi-PPE Hand Tracking}
+Real-time surgical tool detection evaluated via YOLOv11 achieved a mean Average Precision (mAP@0.5) of \textbf{0.988} across 25,000 annotated frames. Every individual surgical instrument class surpassed 97\% detection accuracy, as itemized in Table 2.5.
+
+\begin{table}[htbp]
+\centering
+\caption{YOLOv11 Detection Performance for 12 Surgical Instruments}
+\label{tab:tool_detection}
+\small
+\begin{tabularx}{0.9\textwidth}{@{}l c l c@{}}
+\toprule
+\textbf{Tracked Instrument Class} & \textbf{mAP@0.5 (\%)} & \textbf{Tracked Instrument Class} & \textbf{mAP@0.5 (\%)} \\
+\midrule
+1. Combat Tourniquet & 99.4\% & 7. Surgical Scissors & 98.7\% \\
+2. Verification Label & 98.2\% & 8. Trocar / Suture Needle & 97.9\% \\
+3. Windlass Rod & 99.1\% & 9. IV / Decompression Catheter & 98.4\% \\
+4. Needle Case Enclosure & 98.8\% & 10. Kelly Hemostatic Clamp & 98.1\% \\
+5. Antiseptic Wipe & 97.6\% & 11. Surgical Scalpel & 99.2\% \\
+6. Medical Adhesive Tape & 98.3\% & 12. Endotracheal / Chest Tube & 98.9\% \\
+\midrule
+\multicolumn{3}{@{}l}{\textbf{Overall Mean Average Precision (mAP@0.5)}} & \textbf{98.8\%} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Hand tracking performance was evaluated across varying Personal Protective Equipment (PPE) environments, as shown in Table 2.6.
+
+\begin{table}[htbp]
+\centering
+\caption{Hand Tracking Performance Across Personal Protective Equipment (PPE) Scenarios}
+\label{tab:hand_ppe}
+\small
+\begin{tabularx}{0.85\textwidth}{@{}l c X@{}}
+\toprule
+\textbf{Glove / Hand Scenario} & \textbf{Hand mAP@0.5 (\%)} & \textbf{Operational Context} \\
+\midrule
+Sterilized Gray Latex/Nitrile Gloves & \textbf{90.5\%} & Standard military tactical field care \\
+Bare Hands (No PPE) & 85.5\% & Emergency civilian improvised response \\
+Sterilized Black Nitrile Gloves & 73.8\% & Low-light and SWAT tactical operations \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The system maintained over 90\% detection accuracy on standard gray tactical gloves. The drop observed with black nitrile gloves stems from low visual contrast against dark tactical field stretchers, highlighting an area for expanded training data.
+
+\subsection{Skill Evaluation \& Kinematic Feature Importance}
+The Random Forest classifier trained on 17 kinematic features achieved \textbf{100\% classification accuracy} in delineating expert trauma surgeons from novice practitioners across a test cohort of 20 unscripted procedure videos.
+
+Table 2.7 summarizes the kinematic features and their relative SHAP importance rankings.
+
+\begin{table}[htbp]
+\centering
+\caption{17 Hand Kinematic Feature Vectors and SHAP Importance Metrics}
+\label{tab:kinematic_features}
+\small
+\begin{tabularx}{\textwidth}{@{}l p{4.2cm} c X@{}}
+\toprule
+\textbf{Feature Code} & \textbf{Kinematic Feature Description} & \textbf{SHAP Rank} & \textbf{Clinical Interpretation} \\
+\midrule
+$AV_x, AV_y$ & Average Velocity (x, y) & 1 & Experts maintain deliberate, steady velocity; novices exhibit erratic accelerations. \\
+$AA_x, AA_y$ & Average Acceleration (x, y) & 2 & Sharp directional changes characterize novice hesitations and searching movements. \\
+$AJ_x, AJ_y$ & Average Jerk (Smoothness) & 3 & Trajectory derivative measures smooth muscle coordination and motor economy. \\
+$PVI_x, PVI_y$ & Idle Time Percentage & 4 & Novices spend significantly higher idle duration deliberating anatomical landmarks. \\
+$PVL, PVM, PVH$ & Velocity Distribution Profiles & 5 & Quantifies time spent in low, medium, and high speed operational regimes. \\
+$PL_x, PL_y$ & Cumulative Path Length & 6 & Measures trajectory waste; novices travel up to 2.4$\times$ longer cumulative distances. \\
+$OT$ & Total Operative Duration & 7 & Total elapsed intervention time from incision to stabilization. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+SHAP analysis confirms that \textbf{average velocity ($AV$)} and \textbf{average acceleration ($AA$)} provide the strongest discriminative power. Novices exhibit pronounced, jerky movements with frequent deceleration stops, while experienced surgeons exhibit fluid, continuous, and efficient hand trajectories.
+
+% -------------------------------------------------------------------------
+\section{CLINICAL FEASIBILITY, HUMAN FACTORS \& LIMITATIONS}
+
+\subsection{Cognitive Overload Mitigation vs. Interface Clutter}
+In traumatic combat casualties, first responders operate near their maximum cognitive capacity [12]. Introducing a head-mounted display risks inducing cognitive overload if interface elements obscure the operative field. Visual alerts must adhere to strict spatial typography guidelines:
+\begin{itemize}
+    \item \textbf{Minimalist Heads-Up Display (HUD):} Bounding boxes and labels are rendered only when anomalous actions, missing instruments, or explicit guidance requests occur.
+    \item \textbf{Gaze-Contingent Display Anchoring:} Critical informational cards remain locked to peripheral spatial anchors rather than locking to the central visual axis, preventing occlusion of active incision zones.
+\end{itemize}
+
+\subsection{Psychological ``Will to Cut'' \& Muscle Memory}
+A vital limitation identified by the authors involves human psychological and biomechanical factors [Zhuo et al., 2026]. While the AI Copilot provides visual and cognitive verification of procedural steps, it \textbf{cannot substitute for physical muscle memory} or the tactile feedback required to puncture cartilaginous structures or navigate bone marrow resistance.
+
+Furthermore, an augmented reality overlay cannot resolve the profound psychological hesitation---termed the \textbf{``will to cut''}---that non-physician medics face when executing irreversible, bloody surgical procedures (e.g., slashing a patient's neck during a cricothyroidotomy) on living casualties under fire.
+
+\subsection{Edge Hardware, Latency \& Thermal Constraints}
+Executing spatiotemporal vision transformers (MViTv2), visual language models (BLIP), and YOLOv11 concurrently on a wearable edge device generates substantial computational and thermal stress:
+\begin{itemize}
+    \item \textbf{Thermal Dissipation:} Edge microprocessors generate heat under sustained GPU utilization. In desert or tropical environments, passive cooling can cause thermal throttling, reducing inference framerates below acceptable thresholds.
+    \item \textbf{Battery Endurance:} Multimodal neural processing severely taxes wearable lithium-ion batteries. Field deployment necessitates hybrid power management, duty-cycling heavy vision transformers to activate only when motion sensors detect active procedural transitions.
+\end{itemize}
+
+% =========================================================================
+% CHAPTER 3: CONCLUSION & FUTURE SCOPE (Arabic Page 24)
+% =========================================================================
+\newpage
+\chapter{CONCLUSION \& FUTURE SCOPE}
+
+\section{FUTURE SCOPE \& STRATEGIC RESEARCH AGENDA}
+
+To transition the AI Copilot from an experimental technical validation into mainstream tactical military medical doctrine and civilian disaster response infrastructure, three strategic research directions are identified:
+
+\subsection{Multimodal LLM Integration \& Narrative Guidance}
+Current visual guidance relies on discrete step classification and static VQA lookups. Integrating compact, quantized Large Language Models (LLMs) (e.g., Gemma-2B, LLaMA-3-8B-Instruct) directly onto edge hardware will enable dynamic conversational debriefing [25]. An LLM-backed copilot can synthesize ambient tactical conditions, patient vital sign history, and the medic's specific skill level to deliver nuanced, narrative spoken guidance:
+\begin{equation}
+    \text{Guidance} = \text{LLM}_{\text{quantized}}\Big( \mathcal{Q},\; \Phi_{\text{MViT}}(V_{\text{past}}),\; \Phi_{\text{YOLO}}(\mathcal{T}),\; \mathcal{S}_{\text{RF}} \Big)
+\end{equation}
+Rather than merely announcing ``Scalpel detected,'' the copilot can advise: ``Make a 2\,cm vertical skin incision, maintaining horizontal blade orientation to avoid lateral vessels.''
+
+\subsection{Combat Casualty Care \& Far-Forward Validation}
+Future technical efforts must validate the system in high-fidelity simulated combat casualty care (TCCC) exercises, including night-vision operations, heavy smoke obscurants, helicopter rotor vibration, and patient transport in tactical armored vehicles [1, 3]. Validating the system under realistic military field conditions will benchmark sensor robustness against environmental degradation.
+
+\subsection{Multimodal Sensor Fusion \& Physiological Telemetry}
+The current copilot relies solely on egocentric optical video and directional audio. Future extensions should integrate physiological telemetry from Health Internet of Things (HIoT) patient monitors---including non-invasive blood pressure, end-tidal $\text{CO}_2$, pulse oximetry, and portable handheld ultrasound (POCUS) video feeds [4, 7]. Fusing internal hemodynamic trends with external egocentric vision will enable the copilot to recognize physiological shock states and alert the medic to internal hemorrhage before overt clinical deterioration.
+
+% -------------------------------------------------------------------------
+\section{CONCLUSION}
+
+This seminar report has conducted an exhaustive analysis of an \textbf{Artificial Intelligence Copilot for First Response Medicine}, an edge-native, augmented reality-based medical guidance framework engineered to bridge the critical divide between expert surgical capability and frontline tactical care. By combining wearable optical see-through displays (Microsoft HoloLens) with local GPU microprocessors, the system completely overcomes the vulnerability of conventional telemedicine to communication jamming, latency, and network denial.
+
+Trained on the multimodal egocentric \textbf{Trauma THOMPSON} dataset across five life-saving emergency medical procedures (cricothyroidotomy, intraosseous infusion, needle thoracostomy, tube thoracostomy, and tourniquet application), the system demonstrates technical validation across five core capabilities:
+\begin{itemize}
+    \item \textbf{Procedural Guidance:} MViTv2 established benchmark-leading performance, achieving 89.75\% Top-5 accuracy in action recognition and 87.02\% Top-5 accuracy in anticipating next steps.
+    \item \textbf{Clinical VQA:} BLIP attained 88.64\% accuracy and a 1.0 weighted F1-score for real-time natural language query answering.
+    \item \textbf{Safety Logistics:} YOLOv11 delivered 0.988 mAP@0.5 across 12 surgical tools and robust hand tracking across multiple PPE glove variants.
+    \item \textbf{Objective Credentialing:} A 4th-order tracking differentiator and Random Forest classifier achieved 100\% accuracy in differentiating expert from novice surgical technique, with velocity and acceleration identified as the primary kinematic discriminators.
+\end{itemize}
+
+While human factors such as physical muscle memory and psychological hesitation remain beyond the immediate scope of software algorithms, this edge AI copilot establishes an autonomous, resilient foundation for real-time clinical decision support, continuous medical education, and trauma care across austere environments worldwide.
+
+% =========================================================================
+% REFERENCES (Arabic Page 27)
+% =========================================================================
+\newpage
+\chapter*{REFERENCES}
+\addcontentsline{toc}{chapter}{REFERENCES}
+
+\begin{enumerate}[label={[\arabic*]}, leftmargin=2.5em, itemsep=0.8em]
+    \item J. P. Wachs, A. W. Kirkpatrick, and S. A. Tisherman, ``Procedural telementoring in rural, underdeveloped, and austere settings: origins, present challenges, and future perspectives,'' \textit{Annual Review of Biomedical Engineering}, vol. 23, pp. 115--139, 2021.
+    
+    \item T. Stewart and P. Bird, ``Health economic evaluation: cost-effective strategies in humanitarian and disaster relief medicine,'' \textit{BMJ Military Health}, vol. 168, p. e001859, 2022.
+    
+    \item S. A. Shackelford, D. J. Del Junco, J. C. Riesberg, et al., ``Case-control analysis of prehospital death and prolonged field care survival during recent US military combat operations,'' \textit{Journal of Trauma and Acute Care Surgery}, vol. 91, pp. S186--S193, 2021.
+    
+    \item A. Dinh, A. L. Yin, D. Estrin, et al., ``Augmented reality in real-time telemedicine and telementoring: scoping review,'' \textit{JMIR mHealth and uHealth}, vol. 11, p. e45464, 2023.
+    
+    \item B. Vasey, K. A. N. Lippert, D. Z. Khan, et al., ``Intraoperative applications of artificial intelligence in robotic surgery: a scoping review of current development stages and levels of autonomy,'' \textit{Annals of Surgery}, vol. 278, pp. 896--903, 2023.
+    
+    \item M. Hasan, L. Calvet, N. Rabbani, et al., ``Detection, segmentation, and 3D pose estimation of surgical tools using convolutional neural networks and algebraic geometry,'' \textit{Medical Image Analysis}, vol. 70, p. 101994, 2021.
+    
+    \item P. Manickam, S. A. Mariappan, S. M. Murugesan, et al., ``Artificial Intelligence (AI) and Internet of Medical Things (IoMT) assisted biomedical systems for intelligent healthcare,'' \textit{Biosensors}, vol. 12, no. 8, p. 562, 2022.
+    
+    \item M. Novaes and A. Basu, ``Disruptive technologies: present and future,'' in \textit{Fundamentals of Telemedicine and Telehealth}, Academic Press, pp. 305--330, 2020.
+    
+    \item E. Rojas, K. Couperus, and J. Wachs, ``The AI-Medic: an artificial intelligent mentor for trauma surgery,'' \textit{Computer Methods in Biomechanics and Biomedical Engineering: Imaging \& Visualization}, vol. 9, pp. 1--9, 2021.
+    
+    \item M. Xu, M. Islam, and H. Ren, ``Rethinking surgical captioning: end-to-end window-based MLP transformer using patches,'' \textit{arXiv preprint arXiv:2207.00113}, 2022.
+    
+    \item S. Jha and N. MB, ``The essence of the surgical navigation system using artificial intelligence and augmented reality,'' \textit{International Research Journal of Engineering and Technology}, vol. 6, pp. 2395--2356, 2019.
+    
+    \item D. E. Ehrmann, S. N. Gallant, S. Nagaraj, et al., ``Evaluating and reducing cognitive load should be a priority for machine learning in healthcare,'' \textit{Nature Medicine}, vol. 28, pp. 1331--1333, 2022.
+    
+    \item S. Kar, P. Mishra, J. Lin, et al., ``Systematic evaluation and enhancement of speech recognition in operational medical environments,'' in \textit{Proc. IEEE International Joint Conference on Neural Networks (IJCNN)}, pp. 1--8, 2021.
+    
+    \item S. Barteit, L. Lanfermann, T. B{\"{a}}rnighausen, et al., ``Augmented, mixed, and virtual reality-based head-mounted devices for medical education: systematic review,'' \textit{JMIR Serious Games}, vol. 9, p. e29080, 2021.
+    
+    \item A. K{\i}l{\i}\c{c}, A. Brown, I. Aras, et al., ``Using virtual technology for fear of medical procedures: a systematic review of the effectiveness of virtual reality-based interventions,'' \textit{Annals of Behavioral Medicine}, vol. 55, pp. 1062--1079, 2021.
+    
+    \item N. Mirchi, V. Bissonnette, R. Yilmaz, et al., ``The virtual operative assistant: an explainable artificial intelligence tool for simulation-based training in surgery and medicine,'' \textit{PLoS ONE}, vol. 15, p. e0229596, 2020.
+    
+    \item P. Auloge, R. L. Cazzato, N. Ramamurthy, et al., ``Augmented reality and artificial intelligence-based navigation during percutaneous vertebroplasty: a pilot randomised clinical trial,'' \textit{European Spine Journal}, vol. 29, pp. 1580--1589, 2020.
+    
+    \item Y. Zhuo, A. W. Kirkpatrick, K. Couperus, et al., ``Overview of the trauma THOMPSON challenge at MICCAI,'' in \textit{AI for Brain Lesion Detection and Trauma Video Action Recognition}, Springer Nature Switzerland, pp. 47--60, 2023.
+    
+    \item A. Luke{\v{z}}i{\v{c}}, T. Voj{\'\i}{\v{r}}, L. {\v{C}}ehovin, et al., ``Discriminative correlation filter with channel and spatial reliability,'' \textit{International Journal of Computer Vision}, vol. 126, pp. 671--688, 2018.
+    
+    \item Z. Liu, J. Ning, Y. Cao, et al., ``Video Swin transformer,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, pp. 3192--3201, 2022.
+    
+    \item G. Bertasius, H. Wang, and L. Torresani, ``Is space-time attention all you need for video understanding?'' in \textit{Proc. International Conference on Machine Learning (ICML)}, vol. 2, p. 4, 2021.
+    
+    \item K. Li, Y. Wang, Y. He, et al., ``UniFormerV2: spatiotemporal learning by arming image ViTs with video UniFormer,'' \textit{arXiv preprint arXiv:2211.09552}, 2022.
+    
+    \item Z. Tong, Y. Song, J. Wang, et al., ``VideoMAE: masked autoencoders are data-efficient learners for self-supervised video pre-training,'' \textit{arXiv preprint arXiv:2203.12602}, 2022.
+    
+    \item Y. Li, C.-Y. Wu, H. Fan, et al., ``MViTv2: improved multiscale vision transformers for classification and detection,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, pp. 4804--4814, 2022.
+    
+    \item Y. Zhao, I. Misra, P. Kr{\"a}henb{\"u}hl, et al., ``Learning video representations from large language models,'' in \textit{Proc. IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, pp. 6586--6597, 2023.
+    
+    \item J. Li, D. Li, C. Xiong, et al., ``BLIP: bootstrapping language-image pre-training for unified vision-language understanding and generation,'' in \textit{Proc. International Conference on Machine Learning (ICML)}, PMLR, pp. 12888--12900, 2022.
+    
+    \item W. Kim, B. Son, and I. Kim, ``ViLT: Vision-and-language transformer without convolution or region supervision,'' in \textit{Proc. 38th International Conference on Machine Learning (ICML)}, PMLR, pp. 5583--5594, 2021.
+    
+    \item B. Xiao, H. Wu, W. Xu, et al., ``Florence-2: advancing a unified representation for a variety of vision tasks,'' \textit{arXiv preprint arXiv:2311.06242}, 2023.
+    
+    \item R. Khanam and M. Hussain, ``YOLOv11: an overview of the key architectural enhancements,'' \textit{arXiv preprint arXiv:2410.17725}, 2024.
+    
+    \item B. Guo and Z. Zhao, \textit{Active Disturbance Rejection Control for Nonlinear Systems: An Introduction}, 1st ed., Wiley, 2016.
+    
+    \item L. Yan, K. Ebina, T. Abe, et al., ``Validation and motion analyses of laparoscopic radical nephrectomy with Thiel-embalmed cadavers,'' \textit{Current Problems in Surgery}, vol. 61, p. 101559, 2024.
+    
+    \item S. Lundberg and S.-I. Lee, ``A unified approach to interpreting model predictions,'' \textit{Advances in Neural Information Processing Systems (NeurIPS)}, vol. 30, pp. 4765--4774, 2017.
+\end{enumerate}
+
+\end{document}

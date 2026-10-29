@@ -1,0 +1,579 @@
+\documentclass[aspectratio=169, 10pt]{beamer}
+
+% --- Essential Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+
+% --- Geometry & Margins (Ensures ample margin on all sides) ---
+\setbeamersize{text margin left=1.2cm, text margin right=1.2cm}
+
+% --- Color Palette (Matching Reference Presentation) ---
+\definecolor{headerblue}{RGB}{0, 85, 150}      % Deep professional blue
+\definecolor{bulletblue}{RGB}{0, 85, 150}      % Bullet point blue
+\definecolor{textdark}{RGB}{40, 40, 40}         % Text color
+
+% --- Theme Customization ---
+\setbeamertemplate{navigation symbols}{}        % Remove default navigation icons
+\setbeamercolor{normal text}{fg=textdark}
+\setbeamercolor{frametitle}{fg=white, bg=headerblue}
+\setbeamercolor{item}{fg=bulletblue}
+\setbeamercolor{subitem}{fg=bulletblue}
+\setbeamercolor{enumerate item}{fg=white, bg=headerblue}
+
+% Clean circular bullets matching reference
+\setbeamertemplate{itemize item}{\raisebox{0.14ex}{\color{bulletblue}$\bullet$}}
+\setbeamertemplate{enumerate items}[circle]
+
+% --- Custom Header Bar ---
+\setbeamertemplate{frametitle}{
+    \nointerlineskip
+    \begin{beamercolorbox}[wd=\paperwidth,ht=30pt,dp=8pt,leftskip=1.2cm]{frametitle}
+        \usebeamerfont{frametitle}\textbf{\large\insertframetitle}
+    \end{beamercolorbox}
+}
+
+% --- Custom Footline with Ample Clearance ---
+\setbeamertemplate{footline}{
+    \ifnum\value{framenumber}>1
+    \leavevmode%
+    \hbox{%
+    \begin{beamercolorbox}[wd=.88\paperwidth,ht=14pt,dp=5pt,leftskip=1.2cm]{author in head/foot}%
+        \usebeamercolor[fg]{author in head/foot}\scriptsize\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.12\paperwidth,ht=14pt,dp=5pt,center]{title in head/foot}%
+        \usebeamercolor[fg]{title in head/foot}\scriptsize\textbf{\insertframenumber}
+    \end{beamercolorbox}}%
+    \vskip0pt%
+    \fi
+}
+\setbeamercolor{author in head/foot}{fg=white, bg=headerblue}
+\setbeamercolor{title in head/foot}{fg=white, bg=headerblue}
+
+% --- Meta Information ---
+\title[An Artificial Intelligence Copilot for First Response Medicine]{An Artificial Intelligence Copilot for First Response Medicine}
+\author{Seminar Presentation}
+\date{}
+
+\begin{document}
+
+% ==============================================================================
+% SLIDE 1: TITLE SLIDE
+% ==============================================================================
+\begin{frame}[plain]
+    \vspace*{1.0cm}
+    \nointerlineskip
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.2cm,dp=0.5cm,center]{frametitle}
+        {\LARGE\textbf{\textcolor{white}{An Artificial Intelligence Copilot\\[6pt]for First Response Medicine}}}
+    \end{beamercolorbox}
+
+    \vspace{0.8cm}
+    \begin{center}
+        {\large\textbf{RITHIKA K R}}\\[6pt]
+        {\footnotesize Register No.: \textbf{UNT23CS072}}\\[4pt]
+        {\footnotesize S7 B.Tech Computer Science and Engineering}\\[4pt]
+        {\footnotesize Department of Computer Science and Engineering}\\[4pt]
+        {\footnotesize \textbf{UNIVERSAL ENGINEERING COLLEGE}}\\[8pt]
+        {\footnotesize Guided by: \textbf{Ms ABHIRAMI K J}}
+    \end{center}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 2: CONTENTS
+% ==============================================================================
+\begin{frame}{Contents}
+    \vspace{0.2cm}
+    \begin{columns}[t]
+        \begin{column}{0.48\textwidth}
+            \begin{enumerate}
+                \setlength{\itemsep}{6pt}
+                \item Introduction
+                \item Motivation \& Problem Statement
+                \item Objectives
+                \item Literature Survey
+                \item Existing Research \& Gap
+                \item Proposed AI Copilot Framework 
+                \item Demonstration of AI Copilot 
+                \item System Architecture \& Hardware
+            \end{enumerate}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \begin{enumerate}
+                \setcounter{enumi}{8}
+                \setlength{\itemsep}{6pt}
+                \item Trauma THOMPSON Dataset
+                \item Core Deep Learning Models
+                \item Action Recognition Benchmarks 
+                \item Visual Question Answering Results
+                \item Skill Evaluation \& SHAP Analysis 
+                \item Final Results Summary
+                \item Comparison with Existing Systems
+                \item Conclusion \& Future Scope
+            \end{enumerate}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 3: INTRODUCTION
+% ==============================================================================
+\begin{frame}{Introduction}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Combat medics provide vital initial care under challenging battlefield conditions. [1]
+        \item First responders often possess minimal training yet face complex medical situations. [1]
+        \item Communication networks in austere environments are unstable or absent. [1]
+        \item Procedural precision directly impacts patient survival in high-stakes field care. [1]
+        \item An AI Copilot delivers real-time guidance and objective skill evaluation. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 4: MOTIVATION & PROBLEM STATEMENT
+% ==============================================================================
+\begin{frame}{Motivation \& Problem Statement}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Scarcity of expert medical personnel at frontline Role 1--2 units. [1]
+        \item Unreliable network connectivity makes cloud-based AI systems fail. [1]
+        \item Extreme stress requires hands-free interaction to prevent cognitive overload. [1]
+        \item Responders must frequently rely on Just-In-Time (JIT) improvised techniques. [1]
+        \item An autonomous, edge-based AI system is required for disconnected care. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 5: OBJECTIVES
+% ==============================================================================
+\begin{frame}{Objectives}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Develop an autonomous, edge-based AI Copilot system using Augmented Reality. [1]
+        \item Perform real-time action recognition to verify procedural steps. [1]
+        \item Provide proactive action anticipation to guide the next surgical step. [1]
+        \item Enable visual question answering for context-aware clinical decision support. [1]
+        \item Track surgical tools and evaluate skill proficiency using hand kinematics. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 6: LITERATURE SURVEY (PART 1)
+% ==============================================================================
+\begin{frame}{Literature Survey}
+    \vspace{0.15cm}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.12}
+    \begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{1.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{No.} & \textbf{Paper \& Year} & \textbf{Authors} & \textbf{Methodology} & \textbf{Advantages} & \textbf{Disadvantages} \\
+        \hline
+        1 & Telementoring in austere settings (2021) & Wachs et al. [1] & Reviews telementoring in rural and military healthcare. & Highlights need for guidance in remote care. & Dependent on stable networks; fails offline. \\
+        \hline
+        2 & Prehospital death and field care (2021) & Shackelford et al. [3] & Case-control study on combat casualty survival. & Proves survival impact of rapid prehospital care. & Shows high risk without expert oversight. \\
+        \hline
+        3 & Augmented reality in telementoring (2023) & Dinh et al. [4] & Scoping review of AR surgical telementoring. & Shows benefit of hands-free visual overlays. & Relies on live remote mentors and high bandwidth. \\
+        \hline
+    \end{tabularx}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 7: LITERATURE SURVEY (PART 2)
+% ==============================================================================
+\begin{frame}{Literature Survey}
+    \vspace{0.15cm}
+    \scriptsize
+    \setlength{\tabcolsep}{3pt}
+    \renewcommand{\arraystretch}{1.12}
+    \begin{tabularx}{\textwidth}{|c|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{1.5cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{No.} & \textbf{Paper \& Year} & \textbf{Authors} & \textbf{Methodology} & \textbf{Advantages} & \textbf{Disadvantages} \\
+        \hline
+        4 & Intraoperative AI in surgery (2023) & Vasey et al. [5] & Reviews AI in surgical operating rooms (OR). & High procedural assistance in controlled ORs. & Confined to hospitals; cannot operate in the field. \\
+        \hline
+        5 & The AI-Medic mentor (2021) & Rojas et al. [9] & AI mentor prototype for trauma surgery. & Proves feasibility of intelligent assistance. & Evaluated only under controlled laboratory setups. \\
+        \hline
+        6 & Virtual Operative Assistant (2020) & Mirchi et al. [16] & Explainable AI tool using motion metrics in VR. & Quantifies surgical technique and skill. & Restricted to VR simulators; not field deployable. \\
+        \hline
+    \end{tabularx}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 8: EXISTING RESEARCH & GAP
+% ==============================================================================
+\begin{frame}{Existing Research \& Gap}
+    \vspace{0.2cm}
+    \textbf{Existing Research}
+    \begin{itemize}
+        \setlength{\itemsep}{5pt}
+        \item AI models assist surgical workflows and skill assessments in hospital ORs. [4--7]
+        \item AR and VR tools support medical training and procedural navigation. [14--17]
+        \item Motion tracking has been used to analyze surgical dexterity in simulators. [16, 31]
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \textbf{Research Gap}
+    \begin{itemize}
+        \setlength{\itemsep}{5pt}
+        \item Most AI assistants depend on cloud connectivity and hospital infrastructure. [1, 8]
+        \item Existing systems cannot recognize Just-In-Time (JIT) improvised techniques. [1]
+        \item Lack of edge-based multimodal AI copilots for austere frontline settings. [1, 13]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 9: PROPOSED AI COPILOT FRAMEWORK (FIGURE 1 FROM BASE PAPER)
+% ==============================================================================
+\begin{frame}{Proposed AI Copilot Framework}
+    \vspace{0.1cm}
+    \begin{center}
+        \includegraphics[height=0.74\textheight, keepaspectratio]{fig one.png}\\[4pt]
+        {\footnotesize \textbf{Fig. 1: Artificial intelligence Copilot system overview [1]}}
+    \end{center}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 10: DEMONSTRATION OF AI COPILOT IN ACTION (FIGURE 2 FROM BASE PAPER)
+% ==============================================================================
+\begin{frame}{Demonstration of AI Copilot in Action}
+    \vspace{0.1cm}
+    \begin{itemize}
+        \setlength{\itemsep}{4pt}
+        \item Real-time multimodal assistance visualized directly on egocentric video streams. [1]
+        \item Captures action recognition, action anticipation, hand tracking, and tool detection. [1]
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \begin{center}
+        \includegraphics[width=0.82\textwidth, height=0.48\textheight, keepaspectratio]{fig 2.png}\\[6pt]
+        {\scriptsize \textbf{Fig. 2: AI Copilot on action recognition, anticipation, hand tracking, and object detection [1]}}
+    \end{center}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 11: SYSTEM ARCHITECTURE & HARDWARE SETUP
+% ==============================================================================
+\begin{frame}{System Architecture \& Hardware Setup}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Microsoft HoloLens AR headset captures live video and displays real-time overlays. [1]
+        \item AR application developed using Unity 2020.3.0 (LTS) and MRTK (v1 and v2). [1]
+        \item Attached microprocessor with dedicated GPU executes all AI models locally. [1]
+        \item Deep learning models fine-tuned on an NVIDIA GeForce RTX 4090 Ti. [1]
+        \item Heads-up, hands-free interaction preserves the medic's hands for physical care. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 12: FIVE CORE REAL-TIME TASKS
+% ==============================================================================
+\begin{frame}{Five Core Real-Time Tasks}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Action Recognition: Identifies the medic's current procedural step. [1]
+        \item Action Anticipation: Proactively predicts the next surgical step before execution. [1]
+        \item Visual Question Answering (VQA): Provides context-aware clinical answers. [1]
+        \item Surgical Tool Detection: Monitors the presence and usage of 12 instruments. [1]
+        \item Hand Tracking \& Skill Evaluation: Analyzes motion to grade proficiency. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 13: TRAUMA THOMPSON DATASET & JIT TECHNIQUES
+% ==============================================================================
+\begin{frame}{Trauma THOMPSON Dataset \& JIT Techniques}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Covers 5 procedures: Cricothyroidotomy (CR), Intraosseous Infusion (IO), Needle Thoracostomy (ND), Tube Thoracostomy (CT), and Tourniquet (TQ). [1]
+        \item Regular protocol videos: 177 videos, 42 verbs, 42 nouns, 124 actions. [1]
+        \item Just-In-Time (JIT) videos capture improvised tools (e.g., belt, scissors). [1]
+        \item JIT dataset comprises 28 verbs, 32 nouns, and 86 action classes. [1]
+        \item Contains 8 million egocentric visual question-answer pairs. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 14: DATASET AUGMENTATIONS: HANDS & OBJECTS
+% ==============================================================================
+\begin{frame}{Dataset Augmentations: Hands \& Objects}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item 30 videos and 60,000 frames annotated for hand tracking via CSRT tracker. [1]
+        \item Differentiates left and right hands for bi-manual task assessment. [1]
+        \item Includes diverse glove colors: gray, blue, black, and bare hands. [1]
+        \item 35 videos and 25,000 frames annotated for surgical tools via CSRT. [1]
+        \item Tracks 12 surgical tools: tourniquet, scalpel, needle, tube, kelly, and others. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 15: CORE DEEP LEARNING MODELS & TRAINING
+% ==============================================================================
+\begin{frame}{Core Deep Learning Models \& Training}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Models pretrained on Kinetics-400 and fine-tuned on Trauma THOMPSON. [1]
+        \item Random oversampling applied to handle clinical procedure class imbalance. [1]
+        \item Action models: MViTv2, Uniformer v2, VideoSwin, VideoMAE, TimeSFormer. [1]
+        \item VQA models: BLIP, Florence, and ViLT evaluated. [1]
+        \item Tool detection: YOLOv11 trained for 200 epochs using Cyclical Focal Loss. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 16: BENCHMARK RESULTS: TABLE 1 (FULL REPRODUCTION FROM BASE PAPER)
+% ==============================================================================
+\begin{frame}{Action Recognition \& Anticipation Benchmarks}
+    \vspace{0.1cm}
+    \centering
+    {\scriptsize \textbf{Table 1: Action Recognition and Action Anticipation Accuracy (\%) Comparison [1]}}
+    \vspace{0.1cm}
+
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{|l|l|c|c|c|c|c|c|c|}
+        \hline
+        \textbf{Model} & \textbf{Task} & \textbf{CR Top-1} & \textbf{CT Top-1} & \textbf{IO Top-1} & \textbf{ND Top-1} & \textbf{TQ Top-1} & \textbf{Avg Top-1} & \textbf{Avg Top-5} \\
+        \hline
+        VideoSwin & Recognition & 52.58 & 20.66 & 63.33 & 62.37 & 44.44 & 45.10 & 74.52 \\
+        TimeSformer & Recognition & 40.72 & 15.02 & 47.50 & 38.71 & 22.22 & 31.91 & 62.81 \\
+        VideoMAE & Recognition & 49.48 & 23.47 & 64.17 & 48.39 & 44.44 & 43.34 & 71.89 \\
+        Uniformerv2 & Recognition & 68.56 & 39.44 & 68.33 & 83.87 & 57.14 & 60.47 & 85.65 \\
+        \textbf{MViTv2} & \textbf{Recognition} & \textbf{69.59} & \textbf{47.42} & \textbf{74.17} & \textbf{81.72} & \textbf{74.60} & \textbf{65.59} & \textbf{89.75} \\
+        LaViLa & Recognition & 50.52 & 20.66 & 61.67 & 59.14 & 46.03 & 42.52 & 68.81 \\
+        \hline
+        VideoSwin & Anticipation & 49.73 & 17.96 & 53.51 & 50.59 & 43.64 & 39.88 & 69.24 \\
+        TimeSformer & Anticipation & 37.97 & 8.74 & 42.98 & 25.88 & 43.64 & 28.44 & 59.97 \\
+        VideoMAE & Anticipation & 49.73 & 19.42 & 54.39 & 58.82 & 41.82 & 41.42 & 69.24 \\
+        Uniformerv2 & Anticipation & 67.38 & 31.55 & 64.04 & 78.82 & 60.00 & 56.25 & 84.70 \\
+        \textbf{MViTv2} & \textbf{Anticipation} & \textbf{65.24} & \textbf{37.38} & \textbf{73.68} & \textbf{78.82} & \textbf{70.91} & \textbf{60.12} & \textbf{87.02} \\
+        LaViLa & Anticipation & 48.13 & 18.45 & 52.63 & 48.24 & 40.00 & 38.79 & 67.85 \\
+        \hline
+    \end{tabular}%
+    }
+
+    \vspace{0.15cm}
+    \begin{itemize}
+        \setlength{\itemsep}{4pt}
+        \item MViTv2 achieved highest overall Top-1 (65.59\%) and Top-5 (89.75\%) recognition accuracy. [1]
+        \item Tube Thoracostomy (CT) was consistently lowest across all models (37.38\% anticipation). [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 17: VISUAL QUESTION ANSWERING PERFORMANCE
+% ==============================================================================
+\begin{frame}{Visual Question Answering Performance}
+    \vspace{0.25cm}
+    \begin{itemize}
+        \setlength{\itemsep}{7pt}
+        \item Evaluated for answering real-time clinical and procedural questions. [1]
+        \item BLIP achieved the highest accuracy of 88.64\% and weighted F1 score of 1.0. [1]
+        \item Florence model achieved 87.86\% accuracy and 1.0 F1 score. [1]
+        \item ViLT achieved 79.88\% accuracy. [1]
+        \item Perfect F1 scores validate that AI predictions are clinically plausible. [1]
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \centering
+    \textbf{Best Performance: BLIP – 88.64\% Accuracy (F1: 1.0)}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 18: TOOL DETECTION & HAND TRACKING PERFORMANCE
+% ==============================================================================
+\begin{frame}{Tool Detection \& Hand Tracking Performance}
+    \vspace{0.25cm}
+    \begin{itemize}
+        \setlength{\itemsep}{7pt}
+        \item YOLOv11 achieved an overall mAP@0.5 of 0.988 across all 12 tracked tools. [1]
+        \item All individual tool classes surpassed 97\% detection accuracy. [1]
+        \item Hand detection mAP@0.5 was 90.5\% for gray gloves. [1]
+        \item Hand detection mAP@0.5 was 85.5\% for bare hands. [1]
+        \item Hand detection mAP@0.5 was 73.8\% for black gloves. [1]
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \centering
+    \textbf{Best Tool Detection: YOLOv11 – 0.988 mAP@0.5}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 19: HAND KINEMATICS & SKILL PROFICIENCY EVALUATION
+% ==============================================================================
+\begin{frame}{Hand Kinematics \& Skill Proficiency Evaluation}
+    \vspace{0.25cm}
+    \begin{itemize}
+        \setlength{\itemsep}{7pt}
+        \item Hand centroids processed via 4th-order tracking differentiator. [1]
+        \item Extracted 17 features: path length, velocity, acceleration, jerk, and time. [1]
+        \item Random Forest classifier trained on 20 videos (expert vs novice). [1]
+        \item Model achieved 100\% classification accuracy on the test set. [1]
+        \item Movement kinematics provide an objective measure of procedural skill. [1]
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \centering
+    \textbf{Best Skill Classification: Random Forest – 100\% Accuracy}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 20: SKILL EVALUATION: SHAP & t-SNE (FIGURE 3 FROM BASE PAPER)
+% ==============================================================================
+\begin{frame}{Skill Evaluation: SHAP \& t-SNE Analysis}
+    \vspace{0.1cm}
+    \begin{itemize}
+        \setlength{\itemsep}{4pt}
+        \item Average velocity and acceleration identified as the most influential features via SHAP. [1]
+        \item Clear separation between expert and novice clusters demonstrated using t-SNE. [1]
+    \end{itemize}
+    \vspace{0.2cm}
+    \begin{center}
+        \includegraphics[width=0.80\textwidth, height=0.48\textheight, keepaspectratio]{fig 3.png}\\[6pt]
+        {\scriptsize \textbf{Fig. 3: Skill proficiency evaluation of expert versus novice [1]}}
+    \end{center}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 21: FINAL RESULTS SUMMARY (OVERALL PERFORMANCE)
+% ==============================================================================
+\begin{frame}{Final Results Summary}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{9pt}
+        \item \textbf{Procedural Guidance:} MViTv2 achieved \textbf{89.75\% Top-5 recognition} and \textbf{87.02\% Top-5 anticipation} across 5 emergency procedures. [1]
+        \item \textbf{Clinical Decision Support:} BLIP achieved \textbf{88.64\% VQA accuracy} with a perfect weighted F1 score of 1.0. [1]
+        \item \textbf{Surgical Tool Detection:} YOLOv11 achieved \textbf{0.988 mAP@0.5} across all 12 tracked medical tools. [1]
+        \item \textbf{PPE Robustness:} Hand detection achieved up to \textbf{90.5\% mAP@0.5} across diverse sterilized glove colors. [1]
+        \item \textbf{Objective Skill Evaluation:} Random Forest achieved \textbf{100\% accuracy} in classifying expert vs. novice proficiency. [1]
+    \end{itemize}
+
+    \vspace{0.2cm}
+    \centering
+    \textbf{Overall: Validates complete feasibility of real-time multimodal AI guidance on edge hardware.}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 22: PERFORMANCE COMPARISON: PROPOSED VS. EXISTING SYSTEMS
+% ==============================================================================
+\begin{frame}{Comparison with Existing Systems}
+    \vspace{0.15cm}
+    \scriptsize
+    \setlength{\tabcolsep}{4pt}
+    \renewcommand{\arraystretch}{1.18}
+    \begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+        \hline
+        \textbf{Feature / Metric} & \textbf{Existing / Baseline Systems} & \textbf{Proposed AI Copilot System} \\
+        \hline
+        \textbf{Deployment Environment} & Confined to controlled hospital Operating Rooms (Role 4). [5, 8] & Optimized for austere, disconnected frontline field care (Role 1--2). [1] \\
+        \hline
+        \textbf{Network Dependency} & Requires stable, continuous high-bandwidth cloud connectivity. [1, 4] & Fully edge-based execution on dedicated GPU microprocessor (100\% offline). [1] \\
+        \hline
+        \textbf{Guidance Paradigm} & Reactive advice or passive post-procedure data logging. [13] & Proactive action anticipation (87.02\% Top-5) delivering timely cues before error. [1] \\
+        \hline
+        \textbf{Action Recognition} & Baseline TimeSFormer achieved only 31.91\% Top-1 accuracy. [1] & MViTv2 achieved 65.59\% Top-1 (outperforming baseline by $>$33\%). [1] \\
+        \hline
+        \textbf{Tool \& PPE Adaptability} & Fails on improvised tools and non-standard glove colors. [1] & Handles JIT improvised tools and multiple PPE glove colors (gray, blue, black). [1] \\
+        \hline
+    \end{tabularx}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 23: OPERATIONAL CONSIDERATIONS & HUMAN FACTORS
+% ==============================================================================
+\begin{frame}{Operational Considerations \& Human Factors}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Bridges expert Role 4 medical care to frontline Role 1--2 providers. [1]
+        \item AI assistance cannot replace physical muscle memory required under duress. [1]
+        \item AI does not address the psychological ``will to cut'' on human tissue. [1]
+        \item Clinical reality demands non-linear decisions during patient shifts. [1]
+        \item Hand kinematics support objective debriefing and remote credentialing. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 24: ADVANTAGES, LIMITATIONS \& FUTURE SCOPE
+% ==============================================================================
+\begin{frame}{Advantages, Limitations \& Future Scope}
+    \vspace{0.2cm}
+    \textbf{Advantages}
+    \begin{itemize}
+        \setlength{\itemsep}{3pt}
+        \item Edge-based offline execution eliminates cloud network dependence. [1]
+        \item Proactive action anticipation delivers guidance before errors occur. [1]
+        \item Robust across diverse PPE glove colors and improvised tools. [1]
+    \end{itemize}
+
+    \textbf{Limitations}
+    \begin{itemize}
+        \setlength{\itemsep}{3pt}
+        \item Lower accuracy on complex procedures like Tube Thoracostomy (CT, 37.38\%). [1]
+        \item Current validation is restricted to simulated medical scenarios. [1]
+    \end{itemize}
+
+    \textbf{Future Scope}
+    \begin{itemize}
+        \setlength{\itemsep}{3pt}
+        \item Validate in combat casualty care and far-forward field environments. [1]
+        \item Integrate LLMs for adaptive, narrative guidance tailored to skill level. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 25: CONCLUSION
+% ==============================================================================
+\begin{frame}{Conclusion}
+    \vspace{0.3cm}
+    \begin{itemize}
+        \setlength{\itemsep}{8pt}
+        \item Successfully validated an autonomous AI Copilot for frontline medicine. [1]
+        \item MViTv2 achieved superior action recognition (89.75\%) and anticipation (87.02\%). [1]
+        \item BLIP achieved 88.64\% VQA accuracy with a perfect 1.0 F1 score. [1]
+        \item YOLOv11 achieved 0.988 mAP@0.5 on tools and robust hand tracking. [1]
+        \item Kinematic features with Random Forest achieved 100\% skill classification. [1]
+    \end{itemize}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 26: REFERENCES
+% ==============================================================================
+\begin{frame}{References}
+    \vspace{0.15cm}
+    \scriptsize
+    \begin{enumerate}
+        \setlength{\itemsep}{3pt}
+        \item Zhuo, Y., Radman, M., Zhang, E., et al. (2026). An Artificial Intelligence Copilot for First Response Medicine. \textit{Military Medicine}, Vol. 191, July/August Supplement 2026, pp. 251--258.
+        \item Wachs, J.P., Kirkpatrick, A.W., and Tisherman, S.A. (2021). Procedural telementoring in rural, underdeveloped, and austere settings. \textit{Annu Rev Biomed Eng}, 23, 115--139.
+        \item Shackelford, S.A., Del Junco, D.J., et al. (2021). Case-control analysis of prehospital death and prolonged field care survival. \textit{J Trauma Acute Care Surg}, 91, S186--S193.
+        \item Dinh, A., Yin, A.L., Estrin, D., et al. (2023). Augmented reality in real-time telemedicine and telementoring. \textit{JMIR Mhealth Uhealth}, 11, e45464.
+        \item Vasey, B., Lippert, K.A.N., et al. (2023). Intraoperative applications of artificial intelligence in robotic surgery. \textit{Ann Surg}, 278, 896--903.
+        \item Li, Y., Wu, C.-Y., Fan, H., et al. (2022). MViTv2: Improved multiscale vision transformers for classification and detection. \textit{CVPR 2022}.
+        \item Li, J., Li, D., Xiong, C., et al. (2022). BLIP: Bootstrapping language-image pre-training. \textit{ICML 2022}.
+    \end{enumerate}
+\end{frame}
+
+% ==============================================================================
+% SLIDE 27: THANK YOU / QUESTIONS
+% ==============================================================================
+\begin{frame}[plain]
+    \begin{center}
+        \vspace*{2.4cm}
+        {\Huge\textbf{\textcolor{headerblue}{Thank You!}}}\\[1.2cm]
+        {\Large\textbf{Questions?}}\\[1.0cm]
+        \vfill
+    \end{center}
+\end{frame}
+
+\end{document}

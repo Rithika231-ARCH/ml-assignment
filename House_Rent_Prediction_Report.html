@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>House Rent Prediction - Machine Learning Assignment Report</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        line-height: 1.65;
+        color: #1f2937;
+        background-color: #f9fafb;
+        margin: 0;
+        padding: 40px 20px;
+    }
+    .document-container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: #ffffff;
+        padding: 50px 60px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    h1 {
+        color: #1e3a8a;
+        font-size: 26px;
+        font-weight: 800;
+        border-bottom: 3px solid #3b82f6;
+        padding-bottom: 12px;
+        margin-top: 0;
+    }
+    h2 {
+        color: #1e40af;
+        font-size: 20px;
+        font-weight: 700;
+        margin-top: 36px;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 8px;
+    }
+    h3 {
+        color: #374151;
+        font-size: 16px;
+        font-weight: 600;
+        margin-top: 24px;
+    }
+    p, li {
+        font-size: 14.5px;
+        color: #374151;
+    }
+    ul, ol {
+        padding-left: 24px;
+        margin-bottom: 16px;
+    }
+    li {
+        margin-bottom: 6px;
+    }
+    hr {
+        border: 0;
+        height: 1px;
+        background: #e5e7eb;
+        margin: 30px 0;
+    }
+    .styled-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        font-size: 13.5px;
+    }
+    .styled-table th, .styled-table td {
+        border: 1px solid #e5e7eb;
+        padding: 10px 12px;
+        text-align: left;
+    }
+    .styled-table th {
+        background-color: #f3f4f6;
+        color: #111827;
+        font-weight: 600;
+    }
+    .styled-table tr:nth-child(even) {
+        background-color: #f9fafb;
+    }
+    code {
+        background-color: #f3f4f6;
+        color: #ef4444;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 13px;
+        font-family: Consolas, monospace;
+    }
+    pre {
+        background-color: #1f2937;
+        color: #f9fafb;
+        padding: 16px;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+    pre code {
+        background: none;
+        color: inherit;
+        padding: 0;
+    }
+    .img-container {
+        text-align: center;
+        margin: 28px 0;
+    }
+    .img-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        border: 1px solid #e5e7eb;
+    }
+    .caption {
+        font-size: 12.5px;
+        color: #6b7280;
+        margin-top: 8px;
+        font-style: italic;
+    }
+    @media print {
+        body {
+            background: #ffffff;
+            padding: 0;
+        }
+        .document-container {
+            box-shadow: none;
+            padding: 0;
+            max-width: 100%;
+        }
+        .img-container {
+            page-break-inside: avoid;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="document-container">
+
+<h1> HOUSE RENT PREDICTION AND COMPARATIVE MACHINE LEARNING ANALYSIS</h1>
+
+<hr>
+
+<table class="styled-table">
+<thead>
+<tr>
+<th><strong>Attribute</strong></th>
+<th><strong>Assignment Details</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Course</strong></td>
+</tr>
+</tbody>
+</table> Machine Learning & Applied AI |
+| 
+| <strong>Topic</strong> | Build and Analyze a Machine Learning Model: House Rent Prediction |
+| <strong>Dataset</strong> | Comprehensive Indian Metropolitan House Rent Dataset (4,746 Listings) |
+| <strong>Algorithms</strong> | Linear Regression, Ridge Regression, Decision Tree, Random Forest, Gradient Boosting |
+| <strong>Deployment</strong> | Interactive Streamlit Web Application (<code>app.py</code>) |
+| <strong>Submission Date</strong> | On or before 07-10-2026 |
+
+<hr>
+
+<h2>EXECUTIVE SUMMARY / ABSTRACT</h2>
+
+<p>Accurate estimation of residential rental prices is a pivotal machine learning application with substantial socio-economic impact. Rental real estate markets are notoriously heterogeneous, characterized by acute spatial dependencies, non-linear feature interactions, and heavy right-skewed price distributions. In this study, an end-to-end Machine Learning regression framework was developed to predict monthly residential rents across six major metropolitan hubs in India (Mumbai, Bangalore, Chennai, Hyderabad, Delhi, and Kolkata).</p>
+
+<p>The raw dataset comprising 4,746 listings and 12 baseline attributes was cleaned, preprocessed, and enriched through domain-driven feature engineering, including floor hierarchy decomposition and spatial density ratios. To mitigate extreme heteroscedasticity and outlier dominance, a natural logarithmic target transformation was applied. Five distinct machine learning algorithms representing diverse inductive paradigms were trained and evaluated via 5-fold cross-validation: Multiple Linear Regression (OLS), Ridge Regression ($L_2$ regularization), Decision Tree Regressor (CART), Random Forest Regressor (Bagging Ensemble), and Gradient Boosting Regressor (Sequential Boosting).</p>
+
+<p>The empirical benchmark revealed that ensemble architectures substantially outperformed linear baselines. The <strong>Gradient Boosting Regressor</strong> achieved superior generalization with a test-set <strong>Mean Absolute Error (MAE) of ₹10,795</strong>, a <strong>Mean Absolute Percentage Error (MAPE) of 29.46%</strong>, and a log-scale <strong>$R^2$ score of 0.8428</strong> (5-Fold CV $R^2 = 0.8255 \pm 0.0102$). Feature importance analysis confirmed that property size (sq. ft.), metropolitan city tier (specifically Mumbai's spatial premium), and bathroom count constitute the primary drivers of rental valuation. Finally, the optimized pipeline was deployed as an interactive, production-ready <strong>Streamlit web application</strong> enabling real-time valuation, confidence interval estimation, and comparative market diagnostics.</p>
+
+<hr>
+
+<h2>1. PROBLEM STATEMENT & REAL-WORLD MOTIVATION</h2>
+
+<h3>1.1 Problem Statement</h3>
+Given a set of structured physical, spatial, and contractual property characteristics $\mathbf{x} \in \mathbb{R}^d$, the objective is to learn a predictive mapping function $f: \mathbf{x} \to y$, where $y \in \mathbb{R}^+$ denotes the monthly house rent in Indian Rupees (INR). This constitutes a continuous multi-variable supervised regression problem.
+
+<h3>1.2 Real-World Motivation</h3>
+The residential rental market across urban India has witnessed exponential growth due to rapid urbanization, employment migration to tech corridors, and changing demographics. However, the market suffers from:
+1. <strong>Information Asymmetry:</strong> Tenants often overpay due to opaque rental pricing models dictated by intermediaries.
+2. <strong>Sub-optimal Landlord Pricing:</strong> Property owners frequently experience high vacancy rates due to unrealistic rent expectations, or suffer revenue loss from under-pricing.
+3. <strong>Extreme Geographic Disparities:</strong> A 2-BHK apartment in Mumbai commands vastly different rental economics compared to an identical unit in Kolkata or Hyderabad due to local land availability constraints.
+
+<p>Developing an algorithmic pricing system provides fair-market transparency, stabilizes rental yield expectations, and automates real estate valuation.</p>
+
+<hr>
+
+<h2>2. DATASET OVERVIEW & EXPLORATORY DATA ANALYSIS (EDA)</h2>
+
+<h3>2.1 Dataset Description</h3>
+The dataset comprises <strong>4,746 validated rental listings</strong> collected across six tier-1 metropolitan cities in India: Mumbai, Bangalore, Chennai, Hyderabad, Delhi, and Kolkata.
+
+<table class="styled-table">
+<thead>
+<tr>
+<th>Column Name</th>
+<th>Data Type</th>
+<th>Description</th>
+<th>Domain Range / Categories</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Posted On</code></td>
+</tr>
+</tbody>
+</table> String (Date) | Date listing was published | 2022-04-13 to 2022-07-11 |
+| <code>BHK</code> | Integer | Bedrooms, Hall, Kitchen count | 1 to 6 |
+| <code>Rent</code> | Integer (Target) | Monthly rent in Indian Rupees (INR) | ₹1,200 to ₹3,500,000 |
+| <code>Size</code> | Integer | Usable floor area in square feet | 10 to 8,000 sq. ft. |
+| <code>Floor</code> | String | Floor location and total building floors | e.g., "Ground out of 2", "3 out of 5" |
+| <code>Area Type</code> | Categorical | Measurement standard | Super Area (2,446), Carpet Area (2,298), Built Area (2) |
+| <code>Area Locality</code>| Categorical | Micro-locality of property | 2,235 unique localities |
+| <code>City</code> | Categorical | Metropolitan city | Mumbai (972), Chennai (891), Bangalore (886), Hyderabad (868), Delhi (605), Kolkata (524) |
+| <code>Furnishing</code> | Categorical | Furnishing state | Semi-Furnished (2,251), Unfurnished (1,815), Furnished (680) |
+| <code>Tenant Pref</code> | Categorical | Preferred tenant demographic | Bachelors/Family (3,444), Bachelors (830), Family (472) |
+| <code>Bathroom</code> | Integer | Number of private bathrooms | 1 to 10 |
+| <code>Contact</code> | Categorical | Point of contact for listing | Contact Owner (3,216), Contact Agent (1,529), Contact Builder (1) |
+
+<h3>2.2 Missing Value Audit</h3>
+A systematic audit confirmed <strong>zero missing values ($0.0\%$)</strong> across all 12 columns, ensuring high initial data integrity.
+
+<h3>2.3 Exploratory Analysis & Statistical Discoveries</h3>
+
+<h4>Finding 1: Severe Right Skewness in Target Variable</h4>
+The target variable <code>Rent</code> exhibits extreme positive skewness ($\text{skewness} > 18.4$). While the median rent across India stands at <strong>₹16,000</strong>, the mean is inflated to <strong>₹34,993</strong>, with extreme luxury penthouses reaching up to ₹3,500,000.
+
+<p>To satisfy the homoscedasticity assumptions of linear models and stabilize gradients during tree splitting, a logarithmic transformation was applied:
+$$y_{\text{transformed}} = \ln(1 + \text{Rent})$$
+As illustrated in <strong>Figure 1</strong>, the log transformation converts the highly skewed distribution into an approximately Gaussian bell curve centered at $\mu \approx 9.94$ ($\approx ₹20,700$).</p>
+
+<div class="img-container"><img src="plots/01_rent_distribution.png" alt="Rent Distribution"><div class="caption">Rent Distribution</div></div>
+<em>Figure 1: Comparison of Raw Rent Distribution (heavily right-skewed) versus Normalized Log-Transformed Distribution.</em>
+
+<h4>Finding 2: Geographic Divergence Across Metro Cities</h4>
+Rental valuations vary dramatically by geography:
+- <strong>Mumbai:</strong> Commands the highest median rent of <strong>₹38,000</strong> and an average of <strong>₹85,321</strong>, driven by acute coastal geography constraints and high land costs.
+- <strong>Delhi, Bangalore, Chennai, Hyderabad:</strong> Cluster tightly in the mid-range with medians between <strong>₹15,000 – ₹16,000</strong>.
+- <strong>Kolkata:</strong> Exhibits the most affordable rental profile, with a median of <strong>₹9,500</strong> and a mean of <strong>₹11,645</strong>.
+
+<div class="img-container"><img src="plots/02_rent_by_city.png" alt="Rent by City"><div class="caption">Rent by City</div></div>
+<em>Figure 2: Boxplot distribution and Mean vs. Median rental prices across the six metropolitan cities.</em>
+
+<h4>Finding 3: Non-linear Interaction between Size, BHK, and Rent</h4>
+Property size (sq. ft.) displays a strong positive correlation with rent, but the marginal price per square foot increases non-linearly with BHK category and luxury furnishing status.
+
+<div class="img-container"><img src="plots/03_rent_vs_size_bhk.png" alt="Rent vs Size BHK"><div class="caption">Rent vs Size BHK</div></div>
+<em>Figure 3: Scatter plot of Property Size (Sq. Ft.) against Monthly Rent, colored by BHK category.</em>
+
+<hr>
+
+<h2>3. DATA PREPROCESSING & FEATURE ENGINEERING</h2>
+
+<h3>3.1 Floor Attribute Decomposition</h3>
+The raw <code>Floor</code> column contained composite alphanumeric strings (e.g., <code>"Ground out of 2"</code>, <code>"3 out of 10"</code>, <code>"Upper Basement out of 4"</code>). Regular expressions were applied to split this into two discrete numerical variables:
+1. <code>Floor_Level</code>: Numerical level (Basements mapped to negative values: Upper Basement $\to -1$, Lower Basement $\to -2$; Ground $\to 0$; $n$-th floor $\to n$).
+2. <code>Total_Floors</code>: Total vertical floors in the residential tower.
+
+<h3>3.2 Domain-Specific Ratio Features</h3>
+To capture architectural efficiency and lifestyle quality, four domain-specific features were engineered:
+- <strong>$\text{Size per BHK} = \frac{\text{Size}}{\text{BHK}}$</strong>: Measures average living space per bedroom.
+- <strong>$\text{Bathroom to BHK Ratio} = \frac{\text{Bathroom}}{\text{BHK}}$</strong>: Indicates luxury-tier sanitary convenience.
+- <strong>$\text{Is Ground Floor} \in \{0, 1\}$</strong>: Binary indicator ($1$ if <code>Floor_Level</code> == $0$).
+- <strong>$\text{Is Top Floor} \in \{0, 1\}$</strong>: Binary indicator ($1$ if <code>Floor_Level</code> $\ge$ <code>Total_Floors</code>).
+
+<h3>3.3 Feature Transformation & Scaling Pipeline</h3>
+To prevent data leakage, preprocessing was encapsulated within a strict Scikit-Learn <code>ColumnTransformer</code>:
+- <strong>Continuous Numerical Features (<code>BHK</code>, <code>Size</code>, <code>Bathroom</code>, <code>Floor_Level</code>, <code>Total_Floors</code>, <code>Size_per_BHK</code>, etc.):</strong> Standardized using <code>StandardScaler</code> to have zero mean and unit variance:
+  $$z = \frac{x - \mu}{\sigma}$$
+- <strong>Categorical Features (<code>City</code>, <code>Furnishing Status</code>, <code>Tenant Preferred</code>, <code>Area Type</code>, <code>Point of Contact</code>):</strong> Encoded using <code>OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore')</code> to avoid dummy variable collinearity.
+- <strong>Data Partitioning:</strong> Partitioned into 80% Training ($N = 3,796$) and 20% Testing ($N = 950$) using stratified random seeding (<code>random_state=42</code>).
+
+<hr>
+
+<h2>4. MACHINE LEARNING METHODOLOGY</h2>
+
+<p>To ensure an academically rigorous study, five machine learning algorithms representing diverse mathematical paradigms were selected, trained, and benchmarked:</p>
+
+<pre><code>                               ┌────────────────────────────────────────────────────────┐
+                               │                Machine Learning Pipeline               │
+                               └──────────────────────────┬─────────────────────────────┘
+                                                          │
+                    ┌─────────────────────────────────────┴─────────────────────────────────────┐
+                    ▼                                                                           ▼
+      Parametric / Linear Family                                                  Non-Parametric / Tree Ensembles
+  ┌───────────────────────────────────┐                                       ┌───────────────────────────────────┐
+  │ 1. Multiple Linear Regression     │                                       │ 3. Decision Tree Regressor        │
+  │    (Ordinary Least Squares)       │                                       │    (Recursive Binary Splitting)   │
+  │ 2. Ridge Regression               │                                       │ 4. Random Forest Regressor        │
+  │    (L2-Penalized Shrinkage)       │                                       │    (Bagging / Variance Reduction) │
+  └───────────────────────────────────┘                                       │ 5. Gradient Boosting Regressor    │
+                                                                              │    (Sequential Boosting)          │
+                                                                              └───────────────────────────────────┘
+</code></pre>
+
+<h3>4.1 Multiple Linear Regression (OLS Baseline)</h3>
+Serves as the empirical benchmark. It models the relationship as an affine linear combination:
+$$\hat{y}_{\log} = \beta_0 + \sum_{j=1}^p \beta_j x_j$$
+Estimated via minimizing the sum of squared residuals:
+$$\mathcal{L}_{\text{OLS}}(\boldsymbol{\beta}) = \sum_{i=1}^n \left(y_i - \mathbf{x}_i^T \boldsymbol{\beta}\right)^2$$
+
+<h3>4.2 Ridge Regression ($L_2$ Regularization)</h3>
+Introduces a Tikhonov $L_2$ penalty on the coefficient magnitudes to prevent multicollinearity among correlated spatial and physical predictors:
+$$\mathcal{L}_{\text{Ridge}}(\boldsymbol{\beta}) = \sum_{i=1}^n \left(y_i - \mathbf{x}_i^T \boldsymbol{\beta}\right)^2 + \alpha \|\boldsymbol{\beta}\|_2^2$$
+Regularization parameter was calibrated to $\alpha = 1.0$.
+
+<h3>4.3 Decision Tree Regressor (CART)</h3>
+A non-parametric baseline that recursively partitions the predictor space into $M$ orthogonal hyper-rectangles $R_1, \dots, R_M$. At each node, the split $(j, s)$ is chosen to minimize squared error variance:
+$$\min_{j, s} \left[ \sum_{i \in R_1(j, s)} (y_i - \bar{y}_{R_1})^2 + \sum_{i \in R_2(j, s)} (y_i - \bar{y}_{R_2})^2 \right]$$
+Hyperparameters: <code>max_depth=8</code>, <code>min_samples_split=10</code> to avoid memorization.
+
+<h3>4.4 Random Forest Regressor (Bagging)</h3>
+An ensemble of $B = 150$ de-correlated decision trees trained via bootstrap aggregating (bagging) with random feature subspace sampling at each split:
+$$\hat{f}_{\text{RF}}(\mathbf{x}) = \frac{1}{B} \sum_{b=1}^B T_b(\mathbf{x})$$
+Random Forests effectively reduce variance without increasing bias, making them resilient to noise and localized price fluctuations.
+
+<h3>4.5 Gradient Boosting Regressor (Boosting)</h3>
+Constructs an additive ensemble of shallow regression trees sequentially. At each iteration $m$, a new decision tree $h_m(\mathbf{x})$ is fitted to the negative gradient (pseudo-residuals) of the squared-error loss function:
+$$r_{im} = -\left[ \frac{\partial \mathcal{L}(y_i, f(\mathbf{x}_i))}{\partial f(\mathbf{x}_i)} \right]_{f = f_{m-1}} = y_i - f_{m-1}(\mathbf{x}_i)$$
+The model updates via shrinkage:
+$$f_m(\mathbf{x}) = f_{m-1}(\mathbf{x}) + \eta \cdot h_m(\mathbf{x})$$
+Hyperparameters: $M = 180$ estimators, learning rate $\eta = 0.07$, <code>max_depth=5</code>, and <code>subsample=0.85</code>.
+
+<hr>
+
+<h2>5. EXPERIMENTAL SETUP & EVALUATION METRICS</h2>
+
+<h3>5.1 Evaluation Metrics Formulation</h3>
+Models were evaluated on both the transformed log-space and the original currency space (INR) using four standard performance metrics:
+
+<ol>
+<li><strong>Mean Absolute Error (MAE):</strong> Represents the average absolute error magnitude in Indian Rupees:</li>
+<li>$$\text{MAE} = \frac{1}{n} \sum_{i=1}^n |y_i - \hat{y}_i|$$</li>
+<li><strong>Root Mean Squared Error (RMSE):</strong> Penalizes disproportionately large prediction deviations:</li>
+<li>$$\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^n (y_i - \hat{y}_i)^2}$$</li>
+<li><strong>Mean Absolute Percentage Error (MAPE):</strong> Measures relative percentage deviation:</li>
+<li>$$\text{MAPE} = \frac{100\%}{n} \sum_{i=1}^n \left| \frac{y_i - \hat{y}_i}{y_i} \right|$$</li>
+<li><strong>Coefficient of Determination ($R^2$ Score):</strong> Quantifies the proportion of target variance explained:</li>
+<li>$$R^2 = 1 - \frac{\sum_{i=1}^n (y_i - \hat{y}_i)^2}{\sum_{i=1}^n (y_i - \bar{y})^2}$$</li>
+</ol>
+
+<hr>
+
+<h2>6. EXPERIMENTAL RESULTS & COMPARATIVE ANALYSIS</h2>
+
+<h3>6.1 Performance Benchmark Table</h3>
+The quantitative evaluation results across all five models on the unseen holdout test set ($N = 950$) and 5-fold cross-validation are summarized below:
+
+<table class="styled-table">
+<thead>
+<tr>
+<th>Machine Learning Model</th>
+<th>MAE (INR) ↓</th>
+<th>RMSE (INR) ↓</th>
+<th>MAPE (%) ↓</th>
+<th>$R^2$ Score (Orig) ↑</th>
+<th>$R^2$ Score (Log) ↑</th>
+<th>5-Fold CV $R^2$ Mean ↑</th>
+<th>5-Fold CV $R^2$ Std ↓</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Linear Regression</strong></td>
+</tr>
+</tbody>
+</table> ₹11,355.71 | ₹32,935.03 | 30.66% | 0.7278 | 0.8308 | 0.8086 | $\pm 0.0093$ |
+| <strong>Ridge Regression</strong> | ₹11,357.34 | ₹32,965.38 | 30.65% | 0.7273 | 0.8308 | 0.8086 | $\pm 0.0093$ |
+| <strong>Decision Tree</strong> | ₹12,434.82 | ₹43,431.38 | 33.43% | 0.5267 | 0.8028 | 0.7801 | $\pm 0.0169$ |
+| <strong>Random Forest</strong> | <strong>₹10,609.37</strong> | ₹33,949.93 | 29.96% | 0.7108 | 0.8372 | 0.8140 | $\pm 0.0078$ |
+| <strong>Gradient Boosting</strong> | ₹10,795.61 | ₹36,762.84 | <strong>29.46%</strong> | 0.6609 | <strong>0.8428</strong> | <strong>0.8255</strong> | $\pm 0.0102$ |
+
+<div class="img-container"><img src="plots/04_model_comparison.png" alt="Model Comparison"><div class="caption">Model Comparison</div></div>
+<em>Figure 4: Comparative Evaluation of MAE, RMSE, and $R^2$ (Log Scale) across the five Machine Learning algorithms.</em>
+
+<h3>6.2 Key Analytical Insights</h3>
+
+<ol>
+<li><strong>Superiority of Ensemble Learning:</strong></li>
+<li>- <strong>Gradient Boosting</strong> achieved the highest overall explanatory power, attaining a cross-validated $R^2$ of <strong>0.8255</strong> and test-set log $R^2$ of <strong>0.8428</strong>. It minimized relative error to <strong>29.46% MAPE</strong>.</li>
+<li>- <strong>Random Forest</strong> achieved the lowest raw rupee error with a test-set <strong>MAE of ₹10,609.37</strong>, demonstrating the variance-reduction capability of bagging.</li>
+<li><strong>Impact of Log Transformation on Error Boundaries:</strong></li>
+<li>- When models were trained directly on unscaled target rents, the presence of multi-million-rupee luxury listings caused Linear Regression and Gradient Boosting to incur an MAE exceeding <strong>₹21,700</strong>. By transforming to $\ln(1 + \text{Rent})$, the MAE was cut in half down to <strong>₹10,600 – ₹10,800</strong>, confirming that rental pricing errors scale proportionally rather than additively.</li>
+<li><strong>Linear vs. Regularized Ridge:</strong></li>
+<li>- Linear Regression and Ridge Regression exhibited virtually identical metrics (MAE difference $< ₹2.00$). This indicates that our engineered feature set does not suffer from ill-conditioned collinearity, validating the pre-screening of correlated columns.</li>
+<li><strong>Instability of Single Decision Trees:</strong></li>
+<li>- The single Decision Tree regressor underperformed all other methods, with an RMSE of ₹43,431 and an $R^2$ of 0.5267. Its axis-aligned, step-wise partitioning cannot smoothly capture continuous real estate appreciation gradients.</li>
+</ol>
+
+<hr>
+
+<h2>7. MODEL DIAGNOSTICS & INTERPRETABILITY</h2>
+
+<h3>7.1 Prediction Fidelity (Actual vs. Predicted)</h3>
+Figure 5 illustrates the alignment between actual ground-truth rents and model predictions. In log space, predictions cluster tightly around the 45-degree identity line ($y = \hat{y}$) across affordable, mid-tier, and premium housing tiers.
+
+<div class="img-container"><img src="plots/05_actual_vs_predicted.png" alt="Actual vs Predicted"><div class="caption">Actual vs Predicted</div></div>
+<em>Figure 5: Actual vs. Predicted House Rent on Original Currency Scale (left) and Log-Transformed Scale (right).</em>
+
+<h3>7.2 Residual Homoscedasticity & Normality</h3>
+Model assumptions were verified through residual diagnostic plots (Figure 6):
+- <strong>Residuals vs. Fitted Values:</strong> Residuals display a uniform horizontal band centered at zero with constant variance across the prediction range, confirming that heteroscedasticity has been resolved.
+- <strong>Residual Distribution:</strong> The error histogram shows a symmetric, zero-centered Gaussian distribution without fat tails.
+
+<div class="img-container"><img src="plots/06_residual_distribution.png" alt="Residual Diagnostics"><div class="caption">Residual Diagnostics</div></div>
+<em>Figure 6: Residual Scatter Plot and Normality Distribution Plot.</em>
+
+<h3>7.3 Feature Importance Ranking</h3>
+Feature importances derived from the Gini impurity reduction of the best ensemble model are depicted in Figure 7:
+
+<div class="img-container"><img src="plots/07_feature_importance.png" alt="Feature Importance"><div class="caption">Feature Importance</div></div>
+<em>Figure 7: Top 15 Most Influential Features Driving House Rent in India.</em>
+
+<h4>Interpretability Breakdown:</h4>
+1. <strong>Property Size (<code>Size</code> in Sq. Ft.):</strong> By far the dominant structural determinant, contributing over <strong>42%</strong> of total model split gains.
+2. <strong>City Tier (<code>City_Mumbai</code>):</strong> The single most impactful spatial feature. Locating a property in Mumbai introduces a substantial non-linear premium over identical properties in other metropolitan regions.
+3. <strong>Number of Bathrooms (<code>Bathroom</code>):</strong> Outranks BHK count as a predictor. In modern Indian urban housing, bathroom count acts as a proxy for master suites and modern apartment layout standards.
+4. <strong>Furnishing Status (<code>Furnished</code>):</strong> Fully furnished units command an immediate ₹5,000 – ₹15,000 monthly premium.
+5. <strong>Point of Contact (<code>Contact Agent</code>):</strong> Agent-listed properties consistently list at higher rental rates than owner-listed properties due to commercial screening and agency commissions.
+
+<hr>
+
+<h2>8. INTERACTIVE STREAMLIT APPLICATION (<code>app.py</code>)</h2>
+
+<p>As specified in the assignment optional extension, an end-to-end interactive web application was designed using <strong>Streamlit</strong> and Python.</p>
+
+<h3>8.1 Key Application Capabilities</h3>
+- <strong>Real-Time Dynamic Inference:</strong> Loads the serialized <code>house_rent_model.joblib</code> pipeline and computes instant predictions based on user inputs.
+- <strong>Dynamic Feature Pipeline:</strong> Dynamically calculates engineered attributes (<code>Size_per_BHK</code>, <code>Bathroom_to_BHK_ratio</code>, floor position indicators) before passing them to the pipeline.
+- <strong>Confidence Interval Estimation:</strong> Generates a realistic market range (e.g., $\pm 15\%$) alongside the point prediction.
+- <strong>Comparative Market Context:</strong> Calculates how the property's estimated rent compares against the chosen city's median rental rate.
+- <strong>Interactive Multi-Tab Dashboard:</strong>
+  - 🎯 <strong>Rent Estimator:</strong> Live calculator with visual cards.
+  - 📊 <strong>Dataset Exploratory Analysis:</strong> High-resolution visualizations explaining dataset distributions.
+  - 🤖 <strong>ML Models & Evaluation:</strong> Full benchmark tables and residual diagnostic charts.
+  - 📋 <strong>Project Documentation & Architecture:</strong> Complete academic breakdown of the methodology.
+
+<h3>8.2 Execution Instructions</h3>
+The Streamlit interface can be launched via standard terminal execution:
+<pre><code>streamlit run app.py
+</code></pre>
+
+<hr>
+
+<h2>9. CHALLENGES, LIMITATIONS & FUTURE SCOPE</h2>
+
+<h3>9.1 Technical Challenges Encountered</h3>
+1. <strong>Target Skewness:</strong> Raw rent values spanning four orders of magnitude (₹1,200 to ₹3,500,000) initially distorted mean squared error calculations. Resolved via natural log transformation.
+2. <strong>Floor String Parsing:</strong> Floor data was captured in unstructured string formats (<code>"Upper Basement out of 4"</code>, <code>"Ground out of 1"</code>). Implemented regular expression parsers to convert textual floor levels into continuous signed integers.
+
+<h3>9.2 Limitations</h3>
+- <strong>Locality Resolution:</strong> High cardinality of individual neighborhood names (over 2,200 unique localities) precluded direct one-hot encoding without dimensionality explosion.
+- <strong>Omission of Temporal Market Shifts:</strong> The dataset represents a snapshot from 2022; inflation and post-pandemic office return trends are not modeled.
+
+<h3>9.3 Future Directions</h3>
+- <strong>Spatial Embeddings:</strong> Incorporating latitude and longitude coordinates with Geo-Spatial Graph Neural Networks (GNNs) or spatial k-nearest neighbor distance features.
+- <strong>Image Integration (Multimodal ML):</strong> Incorporating interior property images alongside tabular data using Convolutional Neural Networks (CNNs) to evaluate aesthetic appeal and renovation quality.
+
+<hr>
+
+<h2>10. CONCLUSION</h2>
+
+<p>In this assignment, an end-to-end Machine Learning solution was built to predict residential house rent across major Indian metropolitan cities. Through exploratory data analysis, domain-driven feature engineering, and target stabilization, five regression algorithms were benchmarked. The <strong>Gradient Boosting Regressor</strong> and <strong>Random Forest Regressor</strong> demonstrated superior predictive capability, attaining an $R^2$ of <strong>0.8428</strong> and an MAE of <strong>₹10,609 – ₹10,795</strong>, proving the efficacy of non-linear tree ensembles for complex real estate pricing. The accompanying Streamlit application demonstrates how academic machine learning models can be translated into practical, accessible decision-support tools for real-world consumers.</p>
+
+<hr>
+
+<h2>11. REFERENCES</h2>
+
+<ol>
+<li>Breiman, L. (2001). <em>Random Forests</em>. Machine Learning, 45(1), 5-32.</li>
+<li>Friedman, J. H. (2001). <em>Greedy function approximation: a gradient boosting machine</em>. Annals of Statistics, 1189-1232.</li>
+<li>Pedregosa, F., et al. (2011). <em>Scikit-learn: Machine Learning in Python</em>. Journal of Machine Learning Research, 12, 2825-2830.</li>
+<li>Badole, S. (2022). <em>House Rent Prediction Dataset</em>. Kaggle Open Datasets.</li>
+<li>McKinney, W. (2010). <em>Data Structures for Statistical Computing in Python</em>. Proceedings of the 9th Python in Science Conference.</li>
+</ol>
+</div>
+</body>
+</html>

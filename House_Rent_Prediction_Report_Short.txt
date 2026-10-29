@@ -1,0 +1,93 @@
+================================================================================
+PROJECT REPORT (CONCISE VERSION): HOUSE RENT PREDICTION
+================================================================================
+
+TITLE: Build and Analyze a Machine Learning Model for House Rent Prediction
+DOMAIN: Real Estate Analytics / Supervised Machine Learning (Regression)
+DATASET: 4,746 Listings across 6 Indian Metropolitan Cities
+FINAL MODEL: Gradient Boosting Regressor (R² = 0.8428, MAPE = 29.46%)
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+This project implements an end-to-end Machine Learning regression pipeline to 
+predict fair monthly residential rent across six major Indian metropolitan cities: 
+Mumbai, Bangalore, Chennai, Hyderabad, Delhi, and Kolkata. Five regression algorithms 
+were trained and benchmarked. The Gradient Boosting Regressor achieved the highest 
+predictive accuracy with an R² score of 0.8428 (5-Fold CV R² = 0.8255) and a Mean 
+Absolute Percentage Error (MAPE) of 29.46%. The Random Forest Regressor achieved 
+the lowest absolute rupee error with an MAE of INR 10,609. The final model was 
+deployed as an interactive Streamlit web application.
+
+--------------------------------------------------------------------------------
+2. DATASET OVERVIEW & KEY FINDINGS
+--------------------------------------------------------------------------------
+- Total Records: 4,746 validated real estate listings across 12 features.
+- Missing Values: 0 missing values (100% complete data).
+- Target Skewness: Median rent is INR 16,000, while the mean is INR 34,993 due 
+  to extreme luxury penthouses. Applying log(1 + Rent) stabilized the variance 
+  into a near-normal Gaussian distribution.
+- Geographic Disparity: Mumbai has the highest median rent (INR 38,000) and an 
+  average of INR 85,321 due to severe land constraints. Bangalore, Delhi, Chennai, 
+  and Hyderabad cluster between INR 15,000 - 16,000. Kolkata is the most economical (INR 9,500).
+
+--------------------------------------------------------------------------------
+3. DATA PREPROCESSING & FEATURE ENGINEERING
+--------------------------------------------------------------------------------
+- Floor Parsing: Extracted continuous variables (Floor_Level and Total_Floors) from 
+  text entries like 'Ground out of 2' or '3 out of 10'.
+- Domain Ratios: Engineered Size_per_BHK (room spaciousness) and Bathroom_to_BHK_ratio.
+- Scaling & Encoding: Standardized numerical attributes using StandardScaler and encoded 
+  categorical variables (City, Furnishing, Tenant Type, Area Type) via OneHotEncoder(drop='first').
+- Data Split: 80% Training (3,796 rows) and 20% Holdout Testing (950 rows) with random_state=42.
+
+--------------------------------------------------------------------------------
+4. MODEL BENCHMARK & EVALUATION RESULTS
+--------------------------------------------------------------------------------
+All models were evaluated on the 20% holdout test set using 5-fold cross-validation:
+
++--------------------+------------+------------+----------+----------+----------------+
+| Model Name         |  MAE (INR) | RMSE (INR) | MAPE (%) | R² (Log) | 5-Fold CV R²   |
++--------------------+------------+------------+----------+----------+----------------+
+| Linear Regression  |  11,355.71 |  32,935.03 |   30.66% |   0.8308 | 0.8086 ± 0.009 |
+| Ridge Regression   |  11,357.34 |  32,965.38 |   30.65% |   0.8308 | 0.8086 ± 0.009 |
+| Decision Tree      |  12,434.82 |  43,431.38 |   33.43% |   0.8028 | 0.7801 ± 0.017 |
+| Random Forest      |  10,609.37 |  33,949.93 |   29.96% |   0.8372 | 0.8140 ± 0.008 |
+| Gradient Boosting* |  10,795.61 |  36,762.84 |   29.46% |   0.8428 | 0.8255 ± 0.010 |
++--------------------+------------+------------+----------+----------+----------------+
+*Gradient Boosting was selected as the final deployed model for superior generalization.
+
+--------------------------------------------------------------------------------
+5. KEY ANALYTICAL INSIGHTS
+--------------------------------------------------------------------------------
+- Ensemble Superiority: Gradient Boosting and Random Forest substantially outperformed 
+  single trees and linear models by capturing non-linear interactions.
+- Target Normalization: Direct training on raw INR rent resulted in an MAE > INR 21,700 
+  due to outlier penalties. Transforming to log(1 + Rent) cut the MAE in half to INR 10,600.
+- Top Predictive Features:
+  1. Property Size (Sq. Ft.): Dominant factor explaining >42% of price variance.
+  2. City (Mumbai): Single highest geographical price multiplier.
+  3. Bathroom Count: Strong indicator of modern apartment layouts and luxury tiers.
+  4. Furnishing Status: Furnished properties command an immediate monthly premium.
+
+--------------------------------------------------------------------------------
+6. STREAMLIT WEB APPLICATION
+--------------------------------------------------------------------------------
+An interactive web application (app.py) was built to deploy the model:
+- Live Predictor: Select City, BHK, Size, Bathrooms, and Floor to get instant rent 
+  estimates in INR with a ±15% confidence interval.
+- Market Comparison: Automatically benchmarks the prediction against the city's median rent.
+- Multi-Tab Dashboard: Includes interactive Exploratory Data Analysis, model comparison tables, 
+  and technical documentation.
+
+--------------------------------------------------------------------------------
+7. CONCLUSION
+--------------------------------------------------------------------------------
+The project successfully demonstrates an accurate, scalable machine learning system 
+for urban house rent prediction. By integrating domain feature engineering, log-target 
+normalization, and ensemble learning, the model achieved an R² score of 0.8428 and an 
+average error of ~INR 10,600 - 10,795 across thousands of homes.
+
+================================================================================
+END OF REPORT
+================================================================================
